@@ -7,3 +7,6 @@ navbar:
   right:
     - text: "Source"
       href: https://github.com/xinhe-lab/mirage
+template:
+  params:
+    bootswatch: readable

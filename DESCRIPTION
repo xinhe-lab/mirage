@@ -1,24 +1,24 @@
 Package: mirage 
 Type: Package
 Encoding: UTF-8
-Title: An R package for Mixture model based Rare variant Analysis on Genes.
+Title: An R package for mixture model based rare variant analysis on genes.
 Version: 0.1.0.0
 Date: 2019-08-08
 Authors@R: c(person("Shengtong","Han",role=c("aut", "cre"), email="shengtonghan@gmail.com"),
              person("Gao","Wang",role=c("aut"), email="wangow@gmail.com"),
              person("Xin","He",role="aut"))
 Description: `mirage` is a new Bayesian statistical method for rare variant (RV) association testing that better accounts for heterogeneity of variant effects within a gene using 
-external annotation information. It models variants in a gene as a mixture of risk and non-risk variants, with a prior probability of being a risk variant determined by functional annotations of the variant such as
-conservation score and impact on protein structure. Since in general external annotations alone have limited accuracy in predicting functional effects, a simple filter based on such annotations (as commonly performed in 
-many RV association analysis) may result in both false positive and negatives. Instead, by incorporating such information as prior and using a hierarchical model to pool information across genes, `mirage` is able to better
-characterize the inclusion probability of rare variants for different functional categories, thus improving the power to detect an association.
+    external annotation information. It models variants in a gene as a mixture of risk and non-risk variants, with a prior probability of being a risk variant determined by functional annotations of the variant such as
+    conservation score and impact on protein structure. Since in general external annotations alone have limited accuracy in predicting functional effects, a simple filter based on such annotations (as commonly performed in 
+    many RV association analysis) may result in both false positive and negatives. Instead, by incorporating such information as prior and using a hierarchical model to pool information across genes, `mirage` is able to better
+    characterize the inclusion probability of rare variants for different functional categories, thus improving the power to detect an association.
 URL: https://github.com/xinhe-lab/mirage
 BugReports: https://github.com/xinhe-lab/mirage/issues
 License: BSD_3_clause + file LICENSE
 LazyData: true
 Suggests:
-    ggplot2
-    testthat
+    ggplot2,
+    testthat,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
