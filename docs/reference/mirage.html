@@ -32,7 +32,8 @@
 
 <meta property="og:title" content="Mixture model based rare variant analysis — mirage" />
 
-<meta property="og:description" content="Mixture model based rare variant analysis" />
+<meta property="og:description" content="This function implements the gene based version of rare variant test
+with MIRAGE model" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -100,18 +101,59 @@
 
     <div class="ref-description">
     
-    <p>Mixture model based rare variant analysis</p>
+    <p>This function implements the gene based version of rare variant test
+with MIRAGE model</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>mirage</span>(<span class='no'>...</span>)</pre>
-        
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>data</th>
+      <td><p>geno-pheno data  which is a list, of which every element is also a list with the first element is 
+a genotype matrix with every row being an individual and each column of a variant, the second element is phenotype.</p></td>
+    </tr>
+    <tr>
+      <th>partition</th>
+      <td><p>Variants partitions. For every gene, which variants belong to first variant category and which 
+variants belong to the second, and so on.</p></td>
+    </tr>
+    <tr>
+      <th>gamma</th>
+      <td><p>a vector of category specific effect size prior</p></td>
+    </tr>
+    <tr>
+      <th>sigma</th>
+      <td><p>prior on proportion of risk genes</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    
+
+<dt>BF</dt><dd><p>Bayes factor of genes</p></dd>
+<dt>delta</dt><dd><p>...</p></dd>
+<dt>eta</dt><dd><p>...</p></dd>
+<dt>pvalue</dt><dd><p>...</p></dd>
+
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>mirage</span>(<span class='no'>...</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): '...' used in an incorrect context</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-                </ul>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -1,5 +1,20 @@
-#'@title Mixture model based rare variant analysis
-#'@export
+#' Mixture model based rare variant analysis
+#'
+#' This function implements the gene based version of rare variant test
+#' with MIRAGE model
+#' @param data geno-pheno data  which is a list, of which every element is also a list with the first element is 
+#' a genotype matrix with every row being an individual and each column of a variant, the second element is phenotype.
+#' @param partition Variants partitions. For every gene, which variants belong to first variant category and which 
+#' variants belong to the second, and so on.
+#' @param gamma a vector of category specific effect size prior
+#' @param sigma prior on proportion of risk genes
+#' @return \item{BF}{Bayes factor of genes}
+#' \item{delta}{...}
+#' \item{eta}{...}
+#' \item{pvalue}{...}
+#' @examples
+#' mirage(...)
+#' @export
 mirage = function(...) {
     
     while (stop.cond == 0) {
