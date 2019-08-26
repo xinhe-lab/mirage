@@ -16,6 +16,9 @@ URL: https://github.com/xinhe-lab/mirage
 BugReports: https://github.com/xinhe-lab/mirage/issues
 License: BSD_3_clause + file LICENSE
 LazyData: true
+Imports:
+    progress,
+    R6
 Suggests:
     ggplot2,
     testthat,
