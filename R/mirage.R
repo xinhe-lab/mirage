@@ -126,13 +126,15 @@ mirage = function(data, N1, N0, gamma, sigma, delta, beta.init, max.iter = 10000
         } 
         pb$tick(tokens = list(delta=sprintf(diff, fmt = '%#.1e'), iteration=i))
     }  # end of iter
-    if (num.group > 1) 
+    if (num.group > 1) {
         beta.k = beta.k[1:max.iter, ]
-    if (num.group == 1) 
+    } else { 
         beta.k = beta.k[1:max.iter]
+    }
     # calculate the LRT statistics and p-value 
     # for genes
     ################## 
+    if (verbose) cat('Computing gene level LRT statistics and p-values ...\n')
     lkhd = rep(1, num.gene)
     total.lkhd = 0
     teststat = numeric()
@@ -154,29 +156,34 @@ mirage = function(data, N1, N0, gamma, sigma, delta, beta.init, max.iter = 10000
     # calculate the LRT statistics and p-value 
     # for categories
     ################## 
+    if (verbose) cat('Computing LRT statistics and p-values by functional groups ...\n')
     cate.lkhd = rep(1, num.group)
-    cate.stat = numeric()
-    cate.pvalue = numeric(num.group)
     sum.lkhd = 0
+    cate.stat = numeric()
+    cate.pvalue = numeric()
     for (g in 1:num.group) {
         # g=2
         total.lkhd = 0
         lkhd.gene = rep(1, num.gene)
         for (i in 1:num.gene) {
-            data = full.info.genevar[[i]]
-            if (nrow(data) > 0) 
-                for (j in 1:nrow(data)) if (data$group.index[j] == g) {
+            if (nrow(BF.genevar[[i]]) > 0) 
+                for (j in 1:nrow(BF.genevar[[i]]) if (data$category[BF.genevar$idx[j]]] == g) {
                   lkhd.gene[i] = lkhd.gene[i] * ((1 - beta.k[prev_iter, g]) + beta.k[prev_iter, g] * data$var.BF[j])
                   cate.lkhd[g] = cate.lkhd[g] * ((1 - beta.k[prev_iter, g]) + beta.k[prev_iter, g] * data$var.BF[j])
                 }
-            
             total.lkhd = total.lkhd + log((1 - delta.est[prev_iter]) + delta.est[prev_iter] * lkhd.gene[i])
         }  # end of i
         cate.stat[g] = 2 * total.lkhd
         cate.pvalue[g] = pchisq(2 * total.lkhd, 1, lower.tail = F)
-    }  # end of g
+    }
     sum.lkhd = sum(cate.stat)
     ############################################## 
-    return(result = list(delta.est = delta.est[prev_iter], delta.pvalue = pvalue[length(pvalue)], beta.est = beta.k[prev_iter, ], beta.stat = cate.stat, beta.pvalue = cate.pvalue, BF.gene = data.frame(Gene = unique.gene, 
-        BF = BF.gene[prev_iter, ], LoF.BF = LoF.BF.gene[prev_iter, ], nonLoF.BF = nonLoF.BF.gene[prev_iter, ]), full.info = full.info.genevar, Eui = EUi))
+    return(result = list(
+        delta.est = delta.est[prev_iter], 
+        delta.pvalue = pvalue[length(pvalue)], 
+        beta.est = beta.k[prev_iter, ], 
+        beta.stat = cate.stat, 
+        beta.pvalue = cate.pvalue, 
+        BF.gene = data.frame(Gene = unique.gene, BF = BF.gene[prev_iter, ], LoF.BF = LoF.BF.gene[prev_iter, ], nonLoF.BF = nonLoF.BF.gene[prev_iter, ]), BF.all = BF.genevar, Eui = EUi)
+        )
 }
