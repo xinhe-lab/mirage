@@ -21,11 +21,14 @@
 #' mirage(...)
 #' @importFrom progress progress_bar
 #' @export
-mirage = function(data, N1, N0, gamma, sigma, delta, eta.init, max.iter = 10000, 
+mirage = function(data, N1, N0, gamma, sigma, eta.init, delta = NULL, max.iter = 10000, 
     tol = 1e-05, verbose = TRUE) {
     # Input check & initialize
-    if (!is.null(eta.init)) 
-        eta.k[1, ] = eta.init else stop("FIXME: need default input")
+    if (!is.null(eta.init)) {
+        eta.k[1, ] = eta.init
+     } else {
+         stop("FIXME: need default input")
+     }
     names(data) = c("name", "C1", "C2", "category")
     unique.gene = unique(data$name)
     num.gene = length(unique.gene)
@@ -36,12 +39,18 @@ mirage = function(data, N1, N0, gamma, sigma, delta, eta.init, max.iter = 10000,
     nonLoF.BF.gene = matrix(1, nrow = max.iter, ncol = num.gene)
     BF.genevar = list()
     delta.est = numeric()
-    if (!is.null(delta)) 
-        delta.est[1] = delta else stop("FIXME: need default input")
+    if (!is.null(delta)) { 
+        delta.est[1] = delta
+    } else {
+        stop("FIXME: need default input")
+    }
     # progress bar
-    if (verbose) 
+    if (verbose) {
         pb = progress_bar$new(format = "[:spin] Initial analysis of unit :unit out of :total :elapsed", 
-            clear = FALSE, total = num.gene, show_after = 0.5) else pb = null_progress_bar$new()
+            clear = FALSE, total = num.gene, show_after = 0.5) 
+    } else { 
+        pb = null_progress_bar$new()
+    }
     # calculate the Bayes factor for variant j in gene i
     for (i in 1:num.gene) {
         var.index.list = which(data$name == unique.gene[i])
@@ -59,11 +68,14 @@ mirage = function(data, N1, N0, gamma, sigma, delta, eta.init, max.iter = 10000,
                   var.BF[j] = BF.var.inte(data$C1[var.index.list[j]], data$C2[var.index.list[j]], 
                     bar.gamma = gamma.mean, sig = sigma, N1, N2)
                 }
-                multiplier = 1 - eta.k[1, category] + eta.k[1, category] * var.BF[j]
-                BF.gene[1, i] = BF.gene[1, i] * multiplier
+                mixed_bf = 1 - eta.k[1, category] + eta.k[1, category] * var.BF[j]
+                BF.gene[1, i] = BF.gene[1, i] * mixed_bf
                 ################## split BF of LoF and non LoF FIXME: explain what 2 does here
-                if (category <= 2) 
-                  LoF.BF.gene[1, i] = LoF.BF.gene[1, i] * multiplier else nonLoF.BF.gene[1, i] = nonLoF.BF.gene[1, i] * multiplier
+                if (category <= 2) }{ 
+                  LoF.BF.gene[1, i] = LoF.BF.gene[1, i] * mixed_bf
+                 } else {
+                     nonLoF.BF.gene[1, i] = nonLoF.BF.gene[1, i] * mixed_bf
+                 }
             }
         }
         BF.genevar[[i]] = cbind(var.index.list, var.BF)
@@ -75,7 +87,7 @@ mirage = function(data, N1, N0, gamma, sigma, delta, eta.init, max.iter = 10000,
         pb = progress_bar$new(format = "[:spin] Iteration :iteration (diff = :delta) :elapsed", 
             clear = TRUE, total = max.iter, show_after = 0.5)
     for (iter in 2:max.iter) {
-        prev_iter = prev_iter
+        prev_iter = iter - 1
         # E step expectation for variant (i,j), every gene may have varying number of
         # variant
         EUiZij = list()
@@ -93,12 +105,15 @@ mirage = function(data, N1, N0, gamma, sigma, delta, eta.init, max.iter = 10000,
                     i]) * (eta.k[prev_iter, category] * BF.genevar[[i]]$BF[j] + (1 - 
                     eta.k[prev_iter, category]))
                   UiZij[j] = numer/denom
-                  multiplier = 1 - eta.k[prev_iter, category] + eta.k[prev_iter, 
+                  mixed_bf = 1 - eta.k[prev_iter, category] + eta.k[prev_iter, 
                     category] * BF.genevar[[i]]$BF[j]
-                  BF.gene[iter, i] = BF.gene[iter, i] * multiplier
+                  BF.gene[iter, i] = BF.gene[iter, i] * mixed_bf
                   ########################### split into LoF and non-LoF two parts
-                  if (category <= 2) 
-                    LoF.BF.gene[iter, i] = LoF.BF.gene[iter, i] * multiplier else nonLoF.BF.gene[iter, i] = nonLoF.BF.gene[iter, i] * multiplier
+                  if (category <= 2) {
+                    LoF.BF.gene[iter, i] = LoF.BF.gene[iter, i] * mixed_bf 
+                  } else {
+                      nonLoF.BF.gene[iter, i] = nonLoF.BF.gene[iter, i] * mixed_bf
+                  }
                 }
             }
             EUiZij[[i]] = UiZij
@@ -130,6 +145,7 @@ mirage = function(data, N1, N0, gamma, sigma, delta, eta.init, max.iter = 10000,
         }
         pb$tick(tokens = list(delta = sprintf(diff, fmt = "%#.1e"), iteration = i))
     }  # end of iter
+    # FIXME: need to unify this.
     if (num.group > 1) {
         eta.k = eta.k[1:max.iter, ]
     } else {
@@ -173,10 +189,10 @@ mirage = function(data, N1, N0, gamma, sigma, delta, eta.init, max.iter = 10000,
             if (nrow(BF.genevar[[i]]) > 0) 
                 for (j in 1:nrow(BF.genevar[[i]])) {
                   if (data$category[BF.genevar$idx[j]] == g) {
-                    multiplier = 1 - eta.k[prev_iter, g] + eta.k[prev_iter, g] * 
+                    mixed_bf = 1 - eta.k[prev_iter, g] + eta.k[prev_iter, g] * 
                       data$var.BF[j]
-                    lkhd.gene[i] = lkhd.gene[i] * multiplier
-                    cate.lkhd[g] = cate.lkhd[g] * multiplier
+                    lkhd.gene[i] = lkhd.gene[i] * mixed_bf
+                    cate.lkhd[g] = cate.lkhd[g] * mixed_bf
                   }
                 }
             total.lkhd = total.lkhd + log((1 - delta.est[prev_iter]) + delta.est[prev_iter] * 
