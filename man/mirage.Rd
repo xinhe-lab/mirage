@@ -4,23 +4,32 @@
 \alias{mirage}
 \title{Mixture model based rare variant analysis}
 \usage{
-mirage(...)
+mirage(data, N1, N0, gamma, sigma, delta, eta.init, max.iter = 10000,
+  tol = 1e-05, verbose = TRUE)
 }
 \arguments{
-\item{data}{geno-pheno data  which is a list, of which every element is also a list with the first element is 
-a genotype matrix with every row being an individual and each column of a variant, the second element is phenotype.}
-
-\item{partition}{Variants partitions. For every gene, which variants belong to first variant category and which 
-variants belong to the second, and so on.}
+\item{data}{variant count summary statistics, a 4 column data frame for 1) loci ID, 2) count in group 1, 
+3) count in group 2 and 4) functional category for a variant.}
 
 \item{gamma}{a vector of category specific effect size prior}
 
 \item{sigma}{prior on proportion of risk genes}
+
+\item{delta}{... FIXME}
+
+\item{eta.init}{... FIXME (do you have default eta.init? zero?)}
+
+\item{n1}{sample size for group 1; either an integer number if all variants have the same sample size, or a vector
+of length of number of variants to specify sample size for each variant.}
+
+\item{n2}{sample size for group 2; either an integer number if all variants have the same sample size, or a vector
+of length of number of variants to specify sample size for each variant.}
 }
 \value{
 \item{BF}{Bayes factor of genes}
-\item{delta}{...}
-\item{eta}{...}
+\item{delta.est}{...}
+\item{delta.pvalue}{...}
+\item{eta.est}{...}
 \item{pvalue}{...}
 }
 \description{

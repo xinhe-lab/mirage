@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mixture model based rare variant analysis — mirage • mirage </title>
+<title>Mixture model based rare variant analysis — mirage • mirage</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -63,7 +63,7 @@ with MIRAGE model" />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">mirage </a>
+        <a class="navbar-link" href="../index.html">mirage</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.0</span>
       </span>
     </div>
@@ -106,20 +106,16 @@ with MIRAGE model</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mirage</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>mirage</span>(<span class='no'>data</span>, <span class='no'>N1</span>, <span class='no'>N0</span>, <span class='no'>gamma</span>, <span class='no'>sigma</span>, <span class='no'>delta</span>, <span class='no'>eta.init</span>, <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>10000</span>,
+  <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-05</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>geno-pheno data  which is a list, of which every element is also a list with the first element is 
-a genotype matrix with every row being an individual and each column of a variant, the second element is phenotype.</p></td>
-    </tr>
-    <tr>
-      <th>partition</th>
-      <td><p>Variants partitions. For every gene, which variants belong to first variant category and which 
-variants belong to the second, and so on.</p></td>
+      <td><p>variant count summary statistics, a 4 column data frame for 1) loci ID, 2) count in group 1, 
+3) count in group 2 and 4) functional category for a variant.</p></td>
     </tr>
     <tr>
       <th>gamma</th>
@@ -129,6 +125,24 @@ variants belong to the second, and so on.</p></td>
       <th>sigma</th>
       <td><p>prior on proportion of risk genes</p></td>
     </tr>
+    <tr>
+      <th>delta</th>
+      <td><p>... FIXME</p></td>
+    </tr>
+    <tr>
+      <th>eta.init</th>
+      <td><p>... FIXME (do you have default eta.init? zero?)</p></td>
+    </tr>
+    <tr>
+      <th>n1</th>
+      <td><p>sample size for group 1; either an integer number if all variants have the same sample size, or a vector
+of length of number of variants to specify sample size for each variant.</p></td>
+    </tr>
+    <tr>
+      <th>n2</th>
+      <td><p>sample size for group 2; either an integer number if all variants have the same sample size, or a vector
+of length of number of variants to specify sample size for each variant.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -136,8 +150,9 @@ variants belong to the second, and so on.</p></td>
     
 
 <dt>BF</dt><dd><p>Bayes factor of genes</p></dd>
-<dt>delta</dt><dd><p>...</p></dd>
-<dt>eta</dt><dd><p>...</p></dd>
+<dt>delta.est</dt><dd><p>...</p></dd>
+<dt>delta.pvalue</dt><dd><p>...</p></dd>
+<dt>eta.est</dt><dd><p>...</p></dd>
 <dt>pvalue</dt><dd><p>...</p></dd>
 
     
