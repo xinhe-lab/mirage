@@ -51,3 +51,9 @@ setwd("/path/to/package/root")
 devtools::document()
 devtools::install()
 ```
+
+To auto-format the code,
+```R
+setwd("/path/to/package/root")
+formatR::tidy_dir('./R', wrap = 120)
+```
