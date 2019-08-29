@@ -4,37 +4,38 @@
 \alias{mirage}
 \title{Mixture model based rare variant analysis}
 \usage{
-mirage(data, N1, N0, gamma, sigma, delta, eta.init, max.iter = 10000,
-  tol = 1e-05, verbose = TRUE)
+mirage(data, n1, n2, gamma, sigma, eta, delta, estimate.delta = TRUE,
+  max.iter = 10000, tol = 1e-05, verbose = TRUE)
 }
 \arguments{
-\item{data}{variant count summary statistics, a 4 column data frame for 1) loci ID, 2) count in group 1, 
-3) count in group 2 and 4) functional category for a variant.}
-
-\item{gamma}{a vector of category specific effect size prior}
-
-\item{sigma}{prior on proportion of risk genes}
-
-\item{delta}{... FIXME}
-
-\item{eta.init}{... FIXME (do you have default eta.init? zero?)}
+\item{data}{variant count data, a 4 column data frame for 1) locus ID, 2) count in group 1, 
+3) count in group 2 and 4) category for a variant. The 4th column is optional.}
 
 \item{n1}{sample size for group 1; either an integer number if all variants have the same sample size, or a vector
 of length of number of variants to specify sample size for each variant.}
 
 \item{n2}{sample size for group 2; either an integer number if all variants have the same sample size, or a vector
 of length of number of variants to specify sample size for each variant.}
+
+\item{gamma}{a list of category specific shape parameter for effect size prior, or a numeric value if all category share the same effect size.}
+
+\item{sigma}{a list of category specific scale parameter for effect size prior, or a numeric value if all category share the same effect size.}
+
+\item{eta}{prior on proportion of risk variants in a risk gene.}
+
+\item{delta}{prior on proportion of risk genes.}
 }
 \value{
 \item{BF}{Bayes factor of genes}
-\item{delta.est}{...}
-\item{delta.pvalue}{...}
-\item{eta.est}{...}
-\item{pvalue}{...}
+\item{delta.est}{Estimate for proportion of risk genes}
+\item{delta.pvalue}{Significant test for delta = 0}
+\item{eta.est}{Estimate for proportion of risk variants in a risk gene}
+\item{eta.pvalue}{Significant test for eta = 0}
+\item{BF.gene}{Bayes factor for each gene}
+\item{BF.all}{Bayes factor for each variant}
 }
 \description{
-This function implements the gene based version of rare variant test
-with MIRAGE model
+This function implements rare variant test with MIRAGE model
 }
 \examples{
 mirage(...)
