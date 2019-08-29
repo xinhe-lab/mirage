@@ -51,23 +51,22 @@ mirage = function(data, n1, n2, gamma=3, sigma=1, eta.init=0, delta.init=0, esti
     # calculate the Bayes factor for variant j in gene i
     for (i in 1:num.gene) {
         var.names = rownames(data)[which(data$name == unique.gene[i])]
-        BF.var = numeric()
+        var.BF = numeric()
         if (length(var.names) > 0) {
             # calculate Bayes factor for variant (i,j)
             for (j in 1:length(var.names)) {
                 category = data[var.names[j],]$category
                 # FIXME: have to handle sample size being vectors
-                BF.var[j] = BF.var.inte(data[var.names[j],]$C1, data[var.names[j],]$C2,
+                var.BF[j] = BF.var.inte(data[var.names[j],]$C1, data[var.names[j],]$C2,
                                     ifelse(class(gamma) == "list", gamma[category], gamma), 
                                     ifelse(class(sigma) == "list", sigma[category], sigma), 
                                     n1, n2)
-                mixed_bf = 1 - eta.k[1, category] + eta.k[1, category] * BF.var[j]
+                mixed_bf = 1 - eta.k[1, category] + eta.k[1, category] * var.BF[j]
                 BF.gene[1, i] = BF.gene[1, i] * mixed_bf
                 # FIXME: need to add a utility function that extract BF from given annotation category
             }
         }
-        BF.genevar[[unique.gene[i]]] = cbind(var.names, BF.var)
-        colnames(BF.genevar[[unique.gene[i]]]) = c("variant", "BF")
+        BF.genevar[[unique.gene[i]]] = data.frame(variant=var.names, BF=var.BF)
         pb$tick(tokens = list(total = num.gene, unit = i))
     }
     # EM algorithm
@@ -91,18 +90,14 @@ mirage = function(data, n1, n2, gamma=3, sigma=1, eta.init=0, delta.init=0, esti
             BF.var = BF.genevar[[unique.gene[i]]]
             if (nrow(BF.var) > 0) {
                 for (j in 1:nrow(BF.var)) {
-                  category = data[BF.var[,1][j],]$category
-                  print(class(BF.var[,2][j]))
-                  print(BF.var[,2][j])
-                  print(class(eta.k[prev_iter, category]))
-                  print(eta.k[prev_iter, category])
-                  numer = BF.var[,2][j] * eta.k[prev_iter, category] * delta.est[prev_iter]
+                  category = data[BF.var$variant[j],]$category
+                  numer = BF.var$BF[j] * eta.k[prev_iter, category] * delta.est[prev_iter]
                   denom = (delta.est[prev_iter] + (1 - delta.est[prev_iter])/BF.gene[prev_iter, 
-                    i]) * (eta.k[prev_iter, category] * BF.var[,2][j] + (1 - 
+                    i]) * (eta.k[prev_iter, category] * BF.var$BF[j] + (1 - 
                     eta.k[prev_iter, category]))
                   UiZij[j] = numer/denom
                   mixed_bf = 1 - eta.k[prev_iter, category] + eta.k[prev_iter, 
-                    category] * BF.var[,2][j]
+                    category] * BF.var$BF[j]
                   BF.gene[iter, i] = BF.gene[iter, i] * mixed_bf
                 }
             }
@@ -110,9 +105,9 @@ mirage = function(data, n1, n2, gamma=3, sigma=1, eta.init=0, delta.init=0, esti
             EUi[i] = delta.est[prev_iter] * BF.gene[iter, i]/(delta.est[prev_iter] * BF.gene[iter, i] + 1 - delta.est[prev_iter])
             ###################### Each gene may contain multiple annotation groups
             for (g in 1:num.group) {
-                total.Zij[i, g] = sum(UiZij[which(data[BF.var[,1],]$category == 
+                total.Zij[i, g] = sum(UiZij[which(data[BF.var$variant,]$category == 
                   g)], na.rm = TRUE)
-                total.Ui[i, g] = sum(sum(UiZij[which(data[BF.var[,1],]$category == 
+                total.Ui[i, g] = sum(sum(UiZij[which(data[BF.var$variant,]$category == 
                   g)] > 0, na.rm = TRUE) * EUi[i])
             }
         }
@@ -145,9 +140,9 @@ mirage = function(data, n1, n2, gamma=3, sigma=1, eta.init=0, delta.init=0, esti
         BF.var = BF.genevar[[unique.gene[i]]]
         if (nrow(BF.var) > 0) {
             for (j in 1:nrow(BF.var)) {
-                category = data[BF.var[,1][j],]$category
+                category = data[BF.var$variant[j],]$category
                 lkhd[i] = lkhd[i] * ((1 - eta.k[max.iter, category]) + eta.k[max.iter, 
-                  category] * BF.var[,2][j])
+                  category] * BF.var$BF[j])
             }
         }
         teststat[i] = 2 * log((1 - delta.est[max.iter]) + delta.est[max.iter] * 
@@ -173,8 +168,8 @@ mirage = function(data, n1, n2, gamma=3, sigma=1, eta.init=0, delta.init=0, esti
             BF.var = BF.genevar[[unique.gene[i]]]
             if (nrow(BF.var) > 0) 
                 for (j in 1:nrow(BF.var)) {
-                  if (data[BF.var[,1][j],]$category == g) {
-                    mixed_bf = 1 - eta.k[max.iter, g] + eta.k[max.iter, g] * BF.var[,1][j]
+                  if (data[BF.var$variant[j],]$category == g) {
+                    mixed_bf = 1 - eta.k[max.iter, g] + eta.k[max.iter, g] * BF.var$BF[j]
                     lkhd.gene[i] = lkhd.gene[i] * mixed_bf
                     cate.lkhd[g] = cate.lkhd[g] * mixed_bf
                   }
