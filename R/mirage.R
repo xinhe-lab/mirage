@@ -39,7 +39,6 @@ mirage = function(data, n1, n2, gamma=3, sigma=1, eta.init=0, delta.init=0, esti
     eta.k[1, ] = rep(eta.init, num.group)
     delta.est = delta.init
     BF.gene = matrix(1, nrow = max.iter, ncol = num.gene)
-    colnames(BF.gene) = unique.gene
     BF.genevar = list()
     # progress bar
     if (verbose && num.gene > 1) {
