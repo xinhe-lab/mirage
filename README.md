@@ -14,7 +14,7 @@ characterize the inclusion probability of rare variants for different functional
 
 1. Follow the setup instructions below.
 
-2. See the [Quick Start Example](https://xinhe-lab.github.io/mirage/reference/mirage.html#examples) for a toy example to run `mirage`.
+2. See the [Quick Start Example](https://xinhe-lab.github.io/mirage/articles/mwe.html) for a toy example to run `mirage`.
 
 ## Setup
 

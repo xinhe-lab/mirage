@@ -4,8 +4,9 @@
 \alias{mirage}
 \title{Mixture model based rare variant analysis}
 \usage{
-mirage(data, n1, n2, gamma, sigma, eta, delta, estimate.delta = TRUE,
-  max.iter = 10000, tol = 1e-05, verbose = TRUE)
+mirage(data, n1, n2, gamma = 3, sigma = 1, eta.init = 0,
+  delta.init = 0, estimate.delta = TRUE, max.iter = 10000,
+  tol = 1e-05, verbose = TRUE)
 }
 \arguments{
 \item{data}{variant count data, a 4 column data frame for 1) locus ID, 2) count in group 1, 
@@ -21,9 +22,9 @@ of length of number of variants to specify sample size for each variant.}
 
 \item{sigma}{a list of category specific scale parameter for effect size prior, or a numeric value if all category share the same effect size.}
 
-\item{eta}{prior on proportion of risk variants in a risk gene.}
+\item{eta.init}{initial value for prior on proportion of risk variants in a risk gene.}
 
-\item{delta}{prior on proportion of risk genes.}
+\item{delta.init}{initial value for prior on proportion of risk genes.}
 }
 \value{
 \item{BF}{Bayes factor of genes}
@@ -38,5 +39,5 @@ of length of number of variants to specify sample size for each variant.}
 This function implements rare variant test with MIRAGE model
 }
 \examples{
-mirage(...)
+# see example at https://xinhe-lab.github.io/mirage/articles/mwe.html
 }

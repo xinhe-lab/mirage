@@ -20,7 +20,7 @@
 #' \item{BF.gene}{Bayes factor for each gene}
 #' \item{BF.all}{Bayes factor for each variant}
 #' @examples
-#' mirage(...)
+#' # see example at https://xinhe-lab.github.io/mirage/articles/mwe.html
 #' @importFrom progress progress_bar
 #' @export
 mirage = function(data, n1, n2, gamma=3, sigma=1, eta.init=0, delta.init=0, estimate.delta = TRUE, max.iter = 10000, 

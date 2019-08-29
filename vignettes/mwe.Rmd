@@ -1,0 +1,42 @@
+---
+title: "A minimal example"
+author: "Gao Wang and Shengtong Han"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{minimal example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE,comment = "#",fig.width = 4.5,
+                      fig.height = 3,fig.align = "center",
+                      fig.cap = "&nbsp;",dpi = 120)
+```
+
+
+Here is a minimal example for `mirage`. First load a test toy data-set,
+
+```{r}
+library(mirage)
+data(mirage_toy)
+head(mirage_toy)
+n1 = 1500
+n2 = 1500
+```
+Then anaylze with `mirage`
+
+```{r}
+res = mirage(mirage_toy,n1,n2)
+str(res)
+```
+
+## Session information
+
+Here are some details about the computing environment, including the
+versions of R, and the R packages, used to generate these results.
+
+```{r}
+sessionInfo()
+```

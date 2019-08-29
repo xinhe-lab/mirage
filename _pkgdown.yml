@@ -2,6 +2,8 @@ navbar:
   left:
     - text: "Home"
       href: index.html
+    - text: "Vignettes"
+      href: articles/index.html
     - text: "Functions"
       href: reference/index.html
   right:
@@ -10,3 +12,11 @@ navbar:
 template:
   params:
     bootswatch: readable
+articles:
+  - title: "Vignettes"
+    desc: >
+      The following vignettes provide illustrations of the
+      mirage package, as well as guidance on correct application of the
+      statistical methods.
+    contents:
+    - mwe
