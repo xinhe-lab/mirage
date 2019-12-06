@@ -35,6 +35,10 @@ devtools::document()
 ```
 Please **do not** manually edit any `.Rd` files under `man` folder!
 
+To add tutorials, you write them as `.Rmd` files and put them under
+`vignettes` folder. Then edit [this list](https://github.com/xinhe-lab/mirage/blob/fc6e9f664740996def10e6b35f2b754d91e4c329/_pkgdown.yml#L21)
+simply adding to it the names of your `.Rmd` file (without `.Rmd` extension).
+
 To build the documentation website (make sure you are
 connected to Internet while running these commands):
 
