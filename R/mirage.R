@@ -1,9 +1,9 @@
 #' Mixture model based rare variant analysis
 #'
-#' This function implements rare variant test with MIRAGE model
+#' This function implements rare variant test with full MIRAGE model
 #'
-#' @param data variant count data, a 4 column data frame for 1) locus ID, 2) count in group 1, 
-#' 3) count in group 2 and 4) category for a variant. The 4th column is optional.
+#' @param data variant count data, a 5 column data frame for 1) locus ID, 2) Gene  3) count in group 1, 
+#' 4) count in group 2 and 5) category for a variant. The 4th column is optional.
 #' @param n1 sample size for group 1; either an integer number if all variants have the same sample size, or a vector
 #' of length of number of variants to specify sample size for each variant.
 #' @param n2 sample size for group 2; either an integer number if all variants have the same sample size, or a vector
@@ -15,7 +15,7 @@
 #' @return \item{BF}{Bayes factor of genes}
 #' \item{delta.est}{Estimate for proportion of risk genes}
 #' \item{delta.pvalue}{Significant test for delta = 0}
-#' \item{eta.est}{Estimate for proportion of risk variants in a risk gene}
+#' \item{eta.est}{Estimate for proportion of risk variants in a variant group}
 #' \item{eta.pvalue}{Significant test for eta = 0}
 #' \item{BF.gene}{Bayes factor for each gene}
 #' \item{BF.all}{Bayes factor for each variant}
@@ -199,6 +199,26 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
 }
 
 ###############################################################
+#' Mixture model based rare variant analysis
+#'
+#' This function implements rare variant test with MIRAGE model for variant set 
+#'
+#' @param data variant count data, a 4 column data frame for 1) locus ID  2) count in group 1, 
+#' 3) count in group 2 and 4) category for a variant. The 4th column is optional.
+#' @param n1 sample size for group 1; either an integer number if all variants have the same sample size, or a vector
+#' of length of number of variants to specify sample size for each variant.
+#' @param n2 sample size for group 2; either an integer number if all variants have the same sample size, or a vector
+#' of length of number of variants to specify sample size for each variant.
+#' @param gamma a list of category specific shape parameter for effect size prior, or a numeric value if all category share the same effect size.
+#' @param sigma a list of category specific scale parameter for effect size prior, or a numeric value if all category share the same effect size.
+#' @param eta.init initial value for prior on proportion of risk variants in a variant category
+#' @return \item{BF}{Bayes factor of individual variant}
+#' \item{eta.est}{Estimate for proportion of risk variants in a variant group}
+#' \item{eta.pvalue}{Significant test for eta = 0}
+#' @examples
+#' # see example at https://xinhe-lab.github.io/mirage/articles/mwe.html
+#' @importFrom progress progress_bar
+#' @export
 # format of input data column 1: variant ID 2: No.variant in cses 3 No.variant in control 4 variant group index 
 # n1: sample size in cases n2: sample size in control
 # this is for variant sets (VS) analysis which may be from multiple variant groups 
