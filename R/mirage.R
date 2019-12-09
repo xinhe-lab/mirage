@@ -23,169 +23,339 @@
 #' # see example at https://xinhe-lab.github.io/mirage/articles/mwe.html
 #' @importFrom progress progress_bar
 #' @export
-mirage = function(data, n1, n2, gamma=3, sigma=1, eta.init=0, delta.init=0, estimate.delta = TRUE, max.iter = 10000, 
-    tol = 1e-05, verbose = TRUE) {
-    # Input check & initialize
-    if (ncol(data) == 3) data = c(data, 0)
-    if (ncol(data) != 4) stop("Input data should have 3 or 4 columns!")
-    names(data) = c("name", "C1", "C2", "category")
-    unique.gene = unique(data$name)
-    num.gene = length(unique.gene)
-    groups = unique(data$category)
-    num.group = length(groups)
-    data[,4] = match(data[,4], groups)
-    eta.k = matrix(nrow = max.iter, ncol = num.group)
-    colnames(eta.k) = groups
-    eta.k[1, ] = rep(eta.init, num.group)
-    delta.est = delta.init
-    BF.gene = matrix(1, nrow = max.iter, ncol = num.gene)
-    BF.genevar = list()
-    # progress bar
+# format of input new.data column 1: variant ID 2: Gene ID 3 No.variant in cses 4 No.variant in control 5 variant group index 
+# n1: sample size in cases n2: sample size in control
+# format of input new.data column 1: variant ID 2: Gene ID 3 No.variant in cses 4 No.variant in control 5 variant group index 
+# n1: sample size in cases n2: sample size in control
+mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, max.iter = 10000, tol = 1e-05, verbose = TRUE)
+{
+  # Input check & initialize
+  if (ncol(data) == 4) data = cbind(seq(1, nrow(data)), data)
+  if (ncol(data) != 5) stop("Input data should have 4 or 5 columns!")
+  
+  names(data) = c("ID", "Gene", "No.case", "No.contr", "category")
+  gene.list=data$Gene
+  unique.gene = unique(gene.list)
+  num.gene = length(unique.gene)
+  groups = unique(data$category)
+  num.group = length(groups)
+  data[,5] = match(data[,5], groups)
+  eta.k = matrix(nrow = max.iter, ncol = num.group)
+  colnames(eta.k) = groups
+  eta.k[1, ] = rep(eta.init, num.group)
+  delta.est = delta.init
+  BF.gene = matrix(1, nrow = max.iter, ncol = num.gene)
+  BF.genevar = list()
+  full.info.genevar=list()
+  ########################
     if (verbose && num.gene > 1) {
-        pb = progress_bar$new(format = "[:spin] Initial analysis of unit :unit out of :total :elapsed", 
-            clear = FALSE, total = num.gene, show_after = 0.5) 
+      pb = progress_bar$new(format = "[:spin] Initial analysis of unit :unit out of :total :elapsed", 
+                            clear = FALSE, total = num.gene, show_after = 0.5) 
     } else { 
-        pb = null_progress_bar$new()
+      pb = null_progress_bar$new()
     }
-    # calculate the Bayes factor for variant j in gene i
-    for (i in 1:num.gene) {
-        var.names = rownames(data)[which(data$name == unique.gene[i])]
-        var.BF = numeric()
-        if (length(var.names) > 0) {
-            # calculate Bayes factor for variant (i,j)
-            for (j in 1:length(var.names)) {
-                category = data[var.names[j],]$category
-                # FIXME: have to handle sample size being vectors
-                var.BF[j] = BF.var.inte(data[var.names[j],]$C1, data[var.names[j],]$C2,
-                                    ifelse(class(gamma) == "list", gamma[category], gamma), 
-                                    ifelse(class(sigma) == "list", sigma[category], sigma), 
-                                    n1, n2)
-                mixed_bf = 1 - eta.k[1, category] + eta.k[1, category] * var.BF[j]
-                BF.gene[1, i] = BF.gene[1, i] * mixed_bf
-                # FIXME: need to add a utility function that extract BF from given annotation category
-            }
-        }
-        BF.genevar[[unique.gene[i]]] = data.frame(variant=var.names, BF=var.BF)
-        pb$tick(tokens = list(total = num.gene, unit = i))
-    }
-    # EM algorithm
+  
+  
+  # calculate the Bayes factor for variant (i,j) and gene i as initials.
+  for (i in 1:num.gene)
+  {
+    var.index.list=which(gene.list==unique.gene[i]) # extract all variant index for a gene 
+    indi.gene=data[var.index.list,]
+    indi.gene.BF=1; var.BF=numeric()
+    if (length(var.index.list)>0) # calculate Bayes factor for variant (i,j)
+      for (j in 1:length(var.index.list))
+      {
+        var.index=var.index.list[j]
+        category=data$category[var.index]
+        var.BF[j]=BF.var.inte(data$No.case[var.index], data$No.contr[var.index], ifelse(length(gamma)>1, gamma[category], gamma), ifelse(length(sigma)>1, sigma[category], sigma), n1, n2) # use uniform sigma/bar.gamma or category specific
+        indi.gene.BF=indi.gene.BF*((1-eta.k[1, category])+eta.k[1, category]*var.BF[j])
+        
+      }
+    full.info.genevar[[i]]=cbind(indi.gene, var.BF)
+    BF.gene[1, i]=indi.gene.BF
+    
+    pb$tick(tokens = list(total = num.gene, unit = i))
+  }  # end of i 
+  ########################## EM algorithm
+  ######################
     if (verbose) {
-        pb = progress_bar$new(format = "[:spin] Iteration :iteration (diff = :delta) :elapsed", 
-            clear = TRUE, total = max.iter, show_after = 0.5)
+      pb = progress_bar$new(format = "[:spin] Iteration :iteration (diff = :delta) :elapsed", 
+                            clear = TRUE, total = max.iter, show_after = 0.5)
     } else { 
-        pb = null_progress_bar$new()
+      pb = null_progress_bar$new()
     }
-    for (iter in 2:max.iter) {
-        prev_iter = iter - 1
-        # E step expectation for variant (i,j), every gene may have varying number of
-        # variant
-        EUiZij = list()
-        # expectation for gene i.
-        EUi = numeric()
-        total.Zij = matrix(nrow = num.gene, ncol = num.group)
-        total.Ui = matrix(nrow = num.gene, ncol = num.group)  # used to estimate eta
-        for (i in 1:num.gene) {
-            UiZij = numeric()
-            BF.var = BF.genevar[[unique.gene[i]]]
-            if (nrow(BF.var) > 0) {
-                for (j in 1:nrow(BF.var)) {
-                  category = data[BF.var$variant[j],]$category
-                  numer = BF.var$BF[j] * eta.k[prev_iter, category] * delta.est[prev_iter]
-                  denom = (delta.est[prev_iter] + (1 - delta.est[prev_iter])/BF.gene[prev_iter, 
-                    i]) * (eta.k[prev_iter, category] * BF.var$BF[j] + (1 - 
-                    eta.k[prev_iter, category]))
-                  UiZij[j] = numer/denom
-                  mixed_bf = 1 - eta.k[prev_iter, category] + eta.k[prev_iter, 
-                    category] * BF.var$BF[j]
-                  BF.gene[iter, i] = BF.gene[iter, i] * mixed_bf
-                }
-            }
-            EUiZij[[i]] = UiZij
-            EUi[i] = delta.est[prev_iter] * BF.gene[iter, i]/(delta.est[prev_iter] * BF.gene[iter, i] + 1 - delta.est[prev_iter])
-            ###################### Each gene may contain multiple annotation groups
-            for (g in 1:num.group) {
-                total.Zij[i, g] = sum(UiZij[which(data[BF.var$variant,]$category == 
-                  g)], na.rm = TRUE)
-                total.Ui[i, g] = sum(sum(UiZij[which(data[BF.var$variant,]$category == 
-                  g)] > 0, na.rm = TRUE) * EUi[i])
-            }
+  for (iter in 2:max.iter)
+  {
+    prev_iter=iter-1
+    ############## EM algorithm: E step
+    EUiZij=list() # expectation for variant (i,j), every gene may have varying number of variant
+    EUi=numeric() # expectation for gene i.
+    total.Zij=matrix(nrow=num.gene, ncol=num.group); total.Ui=matrix(nrow=num.gene, ncol=num.group)  # used to estimate beta
+    
+    for (i in 1:num.gene)
+    {
+      info.single.gene=full.info.genevar[[i]] # this is a small matrix for that single gene. each row is one variant
+      bb=1
+      UiZij=numeric()
+      if (nrow(info.single.gene)>0)
+        for (j in 1:nrow(info.single.gene))
+        {
+          category=info.single.gene$category[j]  # category of variant j in gene i 
+          numer=info.single.gene$var.BF[j]*eta.k[prev_iter, category]*delta.est[prev_iter]
+          denom=(delta.est[prev_iter]+(1-delta.est[prev_iter])/BF.gene[prev_iter,i])*(eta.k[prev_iter, category]*info.single.gene$var.BF[j]
+                                                                               +(1-eta.k[prev_iter, category]))
+          UiZij[j]=numer/denom
+          bb=bb*((1-eta.k[prev_iter, category])+eta.k[prev_iter, category]*info.single.gene$var.BF[j])
+          
         }
-        ############## EM algorithm: M step
-        delta.est[iter] = ifelse(estimate.delta, sum(EUi)/num.gene, delta)
-        for (g in 1:num.group) {
-            if (sum(total.Ui[, g]) != 0) 
-                eta.k[iter, g] = sum(total.Zij[, g])/sum(total.Ui[, g])
-            if (sum(total.Ui[, g]) == 0) 
-                eta.k[iter, g] = 0
-        }
-        ################ 
-        diff = sum(abs(eta.k[iter, ] - eta.k[prev_iter, ]))
-        if (diff < tol || iter >= max.iter) {
-            pb$tick(max.iter)
-            max.iter = iter
-            break
-        }
-        pb$tick(tokens = list(delta = sprintf(diff, fmt = "%#.1e"), iteration = i))
-    }  # end of iter
-    eta.k = eta.k[1:max.iter, , drop=FALSE]
-    # calculate the LRT statistics and p-value for genes
-    if (verbose) 
-        cat("Computing gene level LRT statistics and p-values ...\n")
-    lkhd = rep(1, num.gene)
-    total.lkhd = 0
-    teststat = numeric()
-    pvalue = numeric()
-    for (i in 1:num.gene) {
-        BF.var = BF.genevar[[unique.gene[i]]]
-        if (nrow(BF.var) > 0) {
-            for (j in 1:nrow(BF.var)) {
-                category = data[BF.var$variant[j],]$category
-                lkhd[i] = lkhd[i] * ((1 - eta.k[max.iter, category]) + eta.k[max.iter, 
-                  category] * BF.var$BF[j])
-            }
-        }
-        teststat[i] = 2 * log((1 - delta.est[max.iter]) + delta.est[max.iter] * 
-            lkhd[i])
-        # this is the test statistics of one gene
-        total.lkhd = total.lkhd + log((1 - delta.est[max.iter]) + delta.est[max.iter] * 
-            lkhd[i])
-        pvalue[i] = pchisq(teststat[i], 2, lower.tail = F)
+      EUiZij[[i]]=UiZij
+      BF.gene[iter,i]=bb
+      EUi[i]=delta.est[prev_iter]*bb/(delta.est[prev_iter]*bb+1-delta.est[prev_iter])
+      ######################
+      # Note here each gene may have multiple annotation groups
+      tt=EUiZij[[i]]
+      tt[is.na(tt)]=0
+      for (g in 1:num.group)
+      {
+        total.Zij[i, g]=sum(tt[which(info.single.gene$category==g)])
+        total.Ui[i, g]=sum(sum(tt[which(info.single.gene$category==g)]>0)*EUi[i])
+      }
+      
+    }  # end of i
+    
+    ############## EM algorithm: M step
+    delta.est[iter]=sum(EUi)/num.gene
+    for (g in 1:num.group)
+    {
+      if (sum(total.Ui[,g])!=0)
+        eta.k[iter, g]=sum(total.Zij[,g])/sum(total.Ui[,g])
+      if (sum(total.Ui[,g])==0)
+        eta.k[iter, g]=0
     }
-    teststat[num.gene + 1] = 2 * total.lkhd
-    pvalue[num.gene + 1] = pchisq(teststat[num.gene + 1], 2, lower.tail = F)
-    # calculate the LRT statistics and p-value for categories
-    if (verbose) 
-        cat("Computing LRT statistics and p-values by categories ...\n")
-    cate.lkhd = rep(1, num.group)
-    sum.lkhd = 0
-    cate.stat = numeric()
-    cate.pvalue = numeric()
-    for (g in 1:num.group) {
-        total.lkhd = 0
-        lkhd.gene = rep(1, num.gene)
-        for (i in 1:num.gene) {
-            BF.var = BF.genevar[[unique.gene[i]]]
-            if (nrow(BF.var) > 0) 
-                for (j in 1:nrow(BF.var)) {
-                  if (data[BF.var$variant[j],]$category == g) {
-                    mixed_bf = 1 - eta.k[max.iter, g] + eta.k[max.iter, g] * BF.var$BF[j]
-                    lkhd.gene[i] = lkhd.gene[i] * mixed_bf
-                    cate.lkhd[g] = cate.lkhd[g] * mixed_bf
-                  }
-                }
-            total.lkhd = total.lkhd + log((1 - delta.est[max.iter]) + delta.est[max.iter] * 
-                lkhd.gene[i])
-        }  # end of i
-        cate.stat[g] = 2 * total.lkhd
-        cate.pvalue[g] = pchisq(2 * total.lkhd, 1, lower.tail = F)
+    ################
+    diff = sum(abs(eta.k[iter, ] - eta.k[prev_iter, ]))
+    if (diff < tol || iter >= max.iter) {
+        pb$tick(max.iter)
+      max.iter = iter
+      break
     }
-    sum.lkhd = sum(cate.stat)
-    ############################################## 
-    return(result = list(delta.est = delta.est[max.iter], delta.pvalue = pvalue[length(pvalue)], 
-        eta.est = eta.k[max.iter, ], eta.pvalue = cate.pvalue, 
-        BF.gene = data.frame(Gene = unique.gene, BF = BF.gene[max.iter, ]), BF.all = BF.genevar, Eui = EUi))
+        pb$tick(tokens = list(delta = sprintf(diff, fmt = "%#.1e"), iteration = iter))
+  } # end of iter
+  ######################################################################################################
+  ######################################################################################################
+  eta.k = eta.k[1:max.iter, , drop=FALSE]
+  ################## calculate the likelihood ratio test statistics and p value
+  if (verbose) 
+    cat("Computing gene level LRT statistics and p-values ...\n")
+  
+  lkhd=rep(1,num.gene); total.lkhd=0
+  teststat=numeric(); pvalue=numeric()
+  for (i in 1:num.gene)
+  {
+    single.gene=full.info.genevar[[i]]
+    if (nrow(single.gene)>0)
+      for (j in 1:nrow(single.gene))
+      {
+        category=single.gene$category[j]
+        lkhd[i]=lkhd[i]*((1-eta.k[max.iter, category])+eta.k[max.iter, category]*single.gene$var.BF[j])
+      }  
+      
+      teststat[i]=2*log((1-delta.est[max.iter])+delta.est[max.iter]*lkhd[i]); # this is the test statistics of one gene
+      total.lkhd=total.lkhd+log((1-delta.est[max.iter])+delta.est[max.iter]*lkhd[i])
+      
+      pvalue[i]=pchisq(teststat[i], 2, lower.tail=F)
+  } # end of i
+  teststat[num.gene+1]=2*total.lkhd
+  pvalue[num.gene+1]=pchisq(teststat[num.gene+1], 2, lower.tail=F)
+  
+  ##################
+  # calculate the LRT statistics and p-value for categories
+  if (verbose) 
+    cat("Computing LRT statistics and p-values by categories ...\n")
+  cate.lkhd=rep(1,num.group); cate.stat=numeric()
+  cate.pvalue=numeric(num.group); sum.lkhd=0
+  for (g in 1:num.group)
+  { # g=2
+    total.lkhd=0; lkhd.gene=rep(1, num.gene)
+    for (i in 1:num.gene)
+    {
+      single.gene=full.info.genevar[[i]]
+      if (nrow(single.gene)>0)
+        for (j in 1:nrow(single.gene))
+          if (single.gene$category[j]==g)
+          {
+            lkhd.gene[i]=lkhd.gene[i]*((1-eta.k[max.iter, g])+eta.k[max.iter, g]*single.gene$var.BF[j])
+            cate.lkhd[g]=cate.lkhd[g]*((1-eta.k[max.iter, g])+eta.k[max.iter, g]*single.gene$var.BF[j])
+          }
+      
+      total.lkhd=total.lkhd+log((1-delta.est[max.iter])+delta.est[max.iter]*lkhd.gene[i])
+    } # end of i
+    cate.stat[g]=2*total.lkhd
+    cate.pvalue[g]=pchisq(2*total.lkhd, 1, lower.tail=F)
+  } # end of g
+  sum.lkhd=sum(cate.stat)
+  ##############################################
+  return(result = list(delta.est = delta.est[max.iter], delta.pvalue = pvalue[length(pvalue)], 
+                       eta.est = eta.k[max.iter, ], eta.pvalue = cate.pvalue, 
+                       BF.gene = data.frame(Gene = unique.gene, BF = BF.gene[max.iter, ]), BF.all = full.info.genevar, Eui = EUi))
 }
 
+###############################################################
+# format of input new.data column 1: variant ID 2: No.variant in cses 3 No.variant in control 4 variant group index 
+# n1: sample size in cases n2: sample size in control
+# this is for variant sets (VS) analysis which may be from multiple variant groups 
+mirage_vs=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, max.iter = 10000, tol = 1e-05, verbose = TRUE)
+{
+  # Input check & initialize
+  if (ncol(data) == 3) data = cbind(seq(1, nrow(data)), data)
+  if (ncol(data) != 4) stop("Input data should have 3 or 4 columns!")
+  
+  names(data) = c("ID", "No.case", "No.contr", "category")
+  groups = unique(data$category)
+  num.group = length(groups)
+  eta.k = matrix(nrow = max.iter, ncol = num.group)
+  data[,4] = match(data[,4], groups)
+  colnames(eta.k) = groups
+  eta.k[1, ] = rep(eta.init, num.group)
+  full.info.var=list()
+  num.var=nrow(data)
+  var.BF=numeric()
+  ########################
+  if (verbose && num.var > 1) {
+    pb = progress_bar$new(format = "[:spin] Initial analysis of unit :unit out of :total :elapsed", 
+                          clear = FALSE, total = num.var, show_after = 0.5) 
+  } else { 
+    pb = null_progress_bar$new()
+  }
+  
+  
+  #########################################
+  ########################
+  # calculate the Bayes factor for variant j as initials.
+  var.index.list=data$category
+  if (length(var.index.list)>0) # calculate Bayes factor for variant j
+    for (j in 1:length(var.index.list))
+    {
+      category=var.index.list[j]  # category for variant j
+      var.BF[j]=BF.var.inte(data$No.case[j], data$No.contr[j], ifelse(length(gamma)>1, gamma[category], gamma), ifelse(length(sigma)>1, sigma[category], sigma), n1, n2) # use uniform sigma/bar.gamma or category specific
+    
+    }
+  full.info.var=cbind(data, var.BF)
+  #########################################
+  ########################## EM algorithm
+  if (verbose) {
+    pb = progress_bar$new(format = "[:spin] Iteration :iteration (diff = :delta) :elapsed", 
+                          clear = TRUE, total = max.iter, show_after = 0.5)
+  } else { 
+    pb = null_progress_bar$new()
+  }
+  for (iter in 2:max.iter)
+  {
+    prev_iter=iter-1
+    ############################
+    ############## EM algorithm: E step
+    EZj=numeric() # expectation for variant j
+    if (nrow(full.info.var)>0)
+      for (j in 1:nrow(full.info.var))
+      {
+        category=full.info.var$group.index[j]  # category index for variant j 
+        
+        if (num.group>1)
+        {
+          numer=full.info.var$var.BF[j]*eta.k[prev_iter, category]
+          denom=full.info.var$var.BF[j]*eta.k[prev_iter, category]+(1-eta.k[prev_iter, category])
+        }
+        
+        if (num.group==1)
+        {
+          numer=full.info.var$var.BF[j]*eta.k[prev_iter]
+          denom=full.info.var$var.BF[j]*eta.k[prev_iter]+(1-eta.k[prev_iter])
+        }
+        
+        EZj[j]=numer/denom
+      }
+    
+    ############ EM algorithm: M step
+    for (g in 1:num.group)
+    {
+      var.in.group.index=which(data$category==g)
+      if (length(var.in.group.index)>0)
+        eta.k[iter, g]=sum(EZj[var.in.group.index])/length(var.in.group.index)
+      if (length(var.in.group.index)==0)
+        eta.k[iter, g]=0
+    }
+    ################
+    if (num.group>1)
+      diff=sum(abs(eta.k[iter,]-eta.k[prev_iter,]))
+    if (num.group==1)
+      diff=sum(abs(eta.k[iter]-eta.k[prev_iter]))
+    
+    if (diff < tol || iter >= max.iter) {
+      pb$tick(max.iter)
+      max.iter = iter
+      break
+    }
+    pb$tick(tokens = list(delta = sprintf(diff, fmt = "%#.1e"), iteration = iter))
+  } # end of iter
+  ######################################################################################################
+  ######################################################################################################
+  eta.k = eta.k[1:max.iter, , drop=FALSE]
+  ################## calculate the likelihood ratio test statistics and p value
+  if (verbose) 
+    cat("Computing LRT statistics and p-value for every variant and all as a whole ...\n")
+  lkhd=rep(1,num.var); total.lkhd=0
+  teststat=numeric(); pvalue=numeric()
+  
+  if (nrow(full.info.var)>0)
+    for (j in 1:nrow(full.info.var))
+    {
+      category=full.info.var$group.index[j]
+      if (num.group>1)
+        lkhd[j]=lkhd[j]*((1-eta.k[max.iter, category])+eta.k[max.iter, category]*full.info.var$var.BF[j])
+      if (num.group==1)
+        lkhd[j]=lkhd[j]*((1-eta.k[max.iter])+eta.k[max.iter]*full.info.var$var.BF[j])
+      
+      teststat[j]=2*log(lkhd[j]); # this is the test statistics of one gene
+      total.lkhd=total.lkhd+log(lkhd[j])
+      
+      pvalue[j]=pchisq(teststat[j], num.group, lower.tail=F)
+    }
+  teststat[num.var+1]=2*total.lkhd
+  pvalue[num.var+1]=pchisq(teststat[num.var+1], num.group, lower.tail=F) # 
+  
+  ##################
+  ############################################## calculate category specific test statistics and p value
+  if (verbose) 
+    cat("Computing LRT statistics and p-values by categories ...\n")
+  ##################
+  cate.lkhd=rep(1,num.group); cate.stat=numeric()
+  cate.pvalue=numeric(num.group); sum.lkhd=0
+  if (num.group>1)
+    for (g in 1:num.group)
+    { # g=2
+      if (nrow(full.info.var)>0)
+        for (j in 1:nrow(full.info.var))
+          if (full.info.var$group.index[j]==g)
+            cate.lkhd[g]=cate.lkhd[g]*((1-eta.k[max.iter, g])+eta.k[max.iter, g]*full.info.var$var.BF[j])
+          
+          cate.stat[g]=2*log(cate.lkhd[g])
+          cate.pvalue[g]=pchisq(cate.stat[g], 1, lower.tail=F)
+    } # end of g
+  if (num.group==1)
+  {
+    if (nrow(full.info.var)>0)
+      for (j in 1:nrow(full.info.var))
+        cate.lkhd[1]=cate.lkhd[1]*((1-eta.k[max.iter])+eta.k[max.iter]*full.info.var$var.BF[j])
+      
+      cate.stat[1]=2*log(cate.lkhd)
+      cate.pvalue[1]=pchisq(cate.stat, 1, lower.tail=F)
+      
+  }
+  return(result=list(eta.est=eta.k[max.iter,], full.info=full.info.var, eta.pvalue=cate.pvalue))
+  
+}
+
+#################################### two self defined functions 
 intergrand = function(aa, var.case, var.contr, bar.gamma, sig, N1, N0) {
     ff = dbinom(var.case, sum(var.case, var.contr), aa * N1/(aa * N1 + N0)) * dgamma(aa, 
         bar.gamma * sig, sig)
