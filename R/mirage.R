@@ -212,7 +212,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
 #' @param gamma a list of category specific shape parameter for effect size prior, or a numeric value if all category share the same effect size.
 #' @param sigma a list of category specific scale parameter for effect size prior, or a numeric value if all category share the same effect size.
 #' @param eta.init initial value for prior on proportion of risk variants in a variant category
-#' @return \item{BF}{Bayes factor of individual variant}
+#' @return \item{full.info}{Bayes factor of individual variant}
 #' \item{eta.est}{Estimate for proportion of risk variants in a variant group}
 #' \item{eta.pvalue}{Significant test for eta = 0}
 #' @examples
