@@ -1,6 +1,6 @@
 # `mirage`
 
-An R package for Mixture model based Rare variant Analysis on Genes. 
+An R package for MIxture model based Rare variant Analysis on GEnes. 
 
 ## Description
 
