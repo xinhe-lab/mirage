@@ -1,7 +1,9 @@
 navbar:
   left:
+    - text: "Home"
+      href: index.html
     - text: "Vignettes"
-      href: articles/mwe.html
+      href: articles/index.html
     - text: "Functions"
       href: reference/index.html
   right:

@@ -1,5 +1,5 @@
 ---
-title: "A minimal example"
+title: "mirage"
 author: "Gao Wang and Shengtong Han"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -17,7 +17,38 @@ knitr::opts_chunk$set(collapse = TRUE,comment = "#",fig.width = 4.5,
 ```
 
 
-## Input data 
+
+## Usage
+
+`mirage_vs(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, max.iter = 10000, tol = 1e-05, verbose = TRUE)` 
+
+
+
+`mirage(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, max.iter = 10000, tol = 1e-05, verbose = TRUE)` 
+
+## Arguments 
+
+
+* `data`:  the input data with format as the toy example. 
+* `n1, n2`:  sample sizes in cases and controls. 
+* `gamma, sigma`: two hyperprior parameters  in Beta distributions to generate relative risk (RR). 
+* `eta.init`: $\eta$ initial to run EM algorithm, must be a number between 0 and 1.  
+* `delta.init, estimate.delta`: When `estimate.delta=T` $\delta$ initial to run EM algorithm, must be between 0 and 1. It could be a scalar or a vector with $k$ entry corresponding for $k$ th variant group. When it is a scalar, all variant groups share the same inital. When `estimate.delta=F` $\delta$ will be fixed at `delta.init`, thus adding more flexibility to users.   
+* `max.iter`: maximum number of iterations of EM algorithm, which will be enforced to stop when it reaches the max.iter, but in most cases, it converges fast, far less than $10^4$. 
+* `tol`: the threshold for which the differenece of parameter estimates between current iteration and the next is less than, EM will stop. 
+* `verbose`: algorithm progress indicator. 
+
+
+By default,  $\gamma=3, \sigma=2, \eta_0=0.1$ and it is up to users to choose whatever you want, but $\eta$ initial must be a positive number within $(0,1)$.
+
+
+## Details 
+
+## Value
+
+## References 
+
+## Examples  
 
 
 Here is a minimal example for `mirage`. First load  two test toy data-sets, `mirage_vs_toy` is for variant set (VS) with variant level only and `mirage_toy` is for gene set with both variant level and gene level.  
@@ -32,7 +63,6 @@ head(mirage_vs_toy)
 In both `mirage_vs_toy` and `mirage_toy`, every row is a variant with its summary statistics (number of variants in cases `No.case` and number of variants in control `No.contr`), variant group index `group.index` (which variant group it is from) and gene `Gene` (if any, which gene it is in) in columns. Variant groups can be user defined, usually depending on its annotations.  
 
 
-## Output 
 
 Apply `mirage_vs` and `mirage` to toy data. 
 
@@ -55,22 +85,9 @@ res$eta.pvalue
 
 
 
-`n1, n2` are sample sizes in cases and controls. Other parameters are set by default. See parameter settings below. 
+`n1, n2` are sample sizes in cases and controls. Other parameters are set by default.
 
 
-## Parameter setting 
-
-By default,  $\gamma=3, \sigma=2, \eta_0=0.1$ and it is up to users to choose whatever you want, but $\eta$ initial must be a positive number within $(0,1)$.  The full argument are `mirage_vs(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, max.iter = 10000, tol = 1e-05, verbose = TRUE)` and `mirage(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, max.iter = 10000, tol = 1e-05, verbose = TRUE)` 
-
-
-* `data`:  the input data with format as the toy example. 
-* `n1, n2`:  sample sizes in cases and controls. 
-* `gamma, sigma`: two hyperprior parameters  in Beta distributions to generate relative risk (RR). 
-* `eta.init`: $\eta$ initial to run EM algorithm, must be a number between 0 and 1.  
-* `delta.init, estimate.delta`: When `estimate.delta=T` $\delta$ initial to run EM algorithm, must be between 0 and 1. It could be a scalar or a vector with $k$ entry corresponding for $k$ th variant group. When it is a scalar, all variant groups share the same inital. When `estimate.delta=F` $\delta$ will be fixed at `delta.init`, thus adding more flexibility to users.   
-* `max.iter`: maximum number of iterations of EM algorithm, which will be enforced to stop when it reaches the max.iter, but in most cases, it converges fast, far less than $10^4$. 
-* `tol`: the threshold for which the differenece of parameter estimates between current iteration and the next is less than, EM will stop. 
-* `verbose`: algorithm progress indicator. 
 
 
 

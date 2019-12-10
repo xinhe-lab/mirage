@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A minimal example • mirage</title>
+<title>mirage • mirage</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="A minimal example">
+<script src="../pkgdown.js"></script><meta property="og:title" content="mirage">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -38,10 +38,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">Home</a>
-</li>
-<li>
-  <a href="../articles/index.html">Vignettes</a>
+  <a href="../articles/mwe.html">Vignettes</a>
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
@@ -64,7 +61,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>A minimal example</h1>
+      <h1>mirage</h1>
                         <h4 class="author">Gao Wang and Shengtong Han</h4>
             
             <h4 class="date">2019-12-10</h4>
@@ -76,9 +73,52 @@
 
     
     
-<div id="input-data" class="section level2">
+<div id="usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#input-data" class="anchor"></a>Input data</h2>
+<a href="#usage" class="anchor"></a>Usage</h2>
+<p><code><a href="../reference/mirage_vs.html">mirage_vs(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, max.iter = 10000, tol = 1e-05, verbose = TRUE)</a></code></p>
+<p><code><a href="../reference/mirage.html">mirage(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, max.iter = 10000, tol = 1e-05, verbose = TRUE)</a></code></p>
+</div>
+<div id="arguments" class="section level2">
+<h2 class="hasAnchor">
+<a href="#arguments" class="anchor"></a>Arguments</h2>
+<ul>
+<li>
+<code>data</code>: the input data with format as the toy example.</li>
+<li>
+<code>n1, n2</code>: sample sizes in cases and controls.</li>
+<li>
+<code>gamma, sigma</code>: two hyperprior parameters in Beta distributions to generate relative risk (RR).</li>
+<li>
+<code>eta.init</code>: <span class="math inline">\(\eta\)</span> initial to run EM algorithm, must be a number between 0 and 1.<br>
+</li>
+<li>
+<code>delta.init, estimate.delta</code>: When <code>estimate.delta=T</code> <span class="math inline">\(\delta\)</span> initial to run EM algorithm, must be between 0 and 1. It could be a scalar or a vector with <span class="math inline">\(k\)</span> entry corresponding for <span class="math inline">\(k\)</span> th variant group. When it is a scalar, all variant groups share the same inital. When <code>estimate.delta=F</code> <span class="math inline">\(\delta\)</span> will be fixed at <code>delta.init</code>, thus adding more flexibility to users.<br>
+</li>
+<li>
+<code>max.iter</code>: maximum number of iterations of EM algorithm, which will be enforced to stop when it reaches the max.iter, but in most cases, it converges fast, far less than <span class="math inline">\(10^4\)</span>.</li>
+<li>
+<code>tol</code>: the threshold for which the differenece of parameter estimates between current iteration and the next is less than, EM will stop.</li>
+<li>
+<code>verbose</code>: algorithm progress indicator.</li>
+</ul>
+<p>By default, <span class="math inline">\(\gamma=3, \sigma=2, \eta_0=0.1\)</span> and it is up to users to choose whatever you want, but <span class="math inline">\(\eta\)</span> initial must be a positive number within <span class="math inline">\((0,1)\)</span>.</p>
+</div>
+<div id="details" class="section level2">
+<h2 class="hasAnchor">
+<a href="#details" class="anchor"></a>Details</h2>
+</div>
+<div id="value" class="section level2">
+<h2 class="hasAnchor">
+<a href="#value" class="anchor"></a>Value</h2>
+</div>
+<div id="references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+</div>
+<div id="examples" class="section level2">
+<h2 class="hasAnchor">
+<a href="#examples" class="anchor"></a>Examples</h2>
 <p>Here is a minimal example for <code>mirage</code>. First load two test toy data-sets, <code>mirage_vs_toy</code> is for variant set (VS) with variant level only and <code>mirage_toy</code> is for gene set with both variant level and gene level.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(mirage)
 <span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(mirage_toy)
@@ -100,10 +140,6 @@
 <span class="co"># 5       1        0           1</span>
 <span class="co"># 6       2        0           1</span></code></pre></div>
 <p>In both <code>mirage_vs_toy</code> and <code>mirage_toy</code>, every row is a variant with its summary statistics (number of variants in cases <code>No.case</code> and number of variants in control <code>No.contr</code>), variant group index <code>group.index</code> (which variant group it is from) and gene <code>Gene</code> (if any, which gene it is in) in columns. Variant groups can be user defined, usually depending on its annotations.</p>
-</div>
-<div id="output" class="section level2">
-<h2 class="hasAnchor">
-<a href="#output" class="anchor"></a>Output</h2>
 <p>Apply <code>mirage_vs</code> and <code>mirage</code> to toy data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res_vs =<span class="st"> </span><span class="kw"><a href="../reference/mirage_vs.html">mirage_vs</a></span>(mirage_vs_toy,<span class="dt">n1=</span><span class="dv">1000</span>,<span class="dt">n2=</span><span class="dv">1000</span>)
 <span class="co"># Computing LRT statistics and p-value for every variant and all as a whole ...</span>
@@ -144,32 +180,7 @@ res<span class="op">$</span>eta.est
 <span class="co">#  0.000000e+00  1.030961e-01 4.940656e-324 1.976263e-323  7.871498e-02</span>
 res<span class="op">$</span>eta.pvalue
 <span class="co"># [1] 1.0000000 0.4206792 1.0000000 1.0000000 0.2782136</span></code></pre></div>
-<p><code>n1, n2</code> are sample sizes in cases and controls. Other parameters are set by default. See parameter settings below.</p>
-</div>
-<div id="parameter-setting" class="section level2">
-<h2 class="hasAnchor">
-<a href="#parameter-setting" class="anchor"></a>Parameter setting</h2>
-<p>By default, <span class="math inline">\(\gamma=3, \sigma=2, \eta_0=0.1\)</span> and it is up to users to choose whatever you want, but <span class="math inline">\(\eta\)</span> initial must be a positive number within <span class="math inline">\((0,1)\)</span>. The full argument are <code><a href="../reference/mirage_vs.html">mirage_vs(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, max.iter = 10000, tol = 1e-05, verbose = TRUE)</a></code> and <code><a href="../reference/mirage.html">mirage(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, max.iter = 10000, tol = 1e-05, verbose = TRUE)</a></code></p>
-<ul>
-<li>
-<code>data</code>: the input data with format as the toy example.</li>
-<li>
-<code>n1, n2</code>: sample sizes in cases and controls.</li>
-<li>
-<code>gamma, sigma</code>: two hyperprior parameters in Beta distributions to generate relative risk (RR).</li>
-<li>
-<code>eta.init</code>: <span class="math inline">\(\eta\)</span> initial to run EM algorithm, must be a number between 0 and 1.<br>
-</li>
-<li>
-<code>delta.init, estimate.delta</code>: When <code>estimate.delta=T</code> <span class="math inline">\(\delta\)</span> initial to run EM algorithm, must be between 0 and 1. It could be a scalar or a vector with <span class="math inline">\(k\)</span> entry corresponding for <span class="math inline">\(k\)</span> th variant group. When it is a scalar, all variant groups share the same inital. When <code>estimate.delta=F</code> <span class="math inline">\(\delta\)</span> will be fixed at <code>delta.init</code>, thus adding more flexibility to users.<br>
-</li>
-<li>
-<code>max.iter</code>: maximum number of iterations of EM algorithm, which will be enforced to stop when it reaches the max.iter, but in most cases, it converges fast, far less than <span class="math inline">\(10^4\)</span>.</li>
-<li>
-<code>tol</code>: the threshold for which the differenece of parameter estimates between current iteration and the next is less than, EM will stop.</li>
-<li>
-<code>verbose</code>: algorithm progress indicator.</li>
-</ul>
+<p><code>n1, n2</code> are sample sizes in cases and controls. Other parameters are set by default.</p>
 </div>
 <div id="session-information" class="section level2">
 <h2 class="hasAnchor">
@@ -214,9 +225,12 @@ res<span class="op">$</span>eta.pvalue
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#input-data">Input data</a></li>
-      <li><a href="#output">Output</a></li>
-      <li><a href="#parameter-setting">Parameter setting</a></li>
+<li><a href="#usage">Usage</a></li>
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#references">References</a></li>
+      <li><a href="#examples">Examples</a></li>
       <li><a href="#session-information">Session information</a></li>
       </ul>
 </div>
