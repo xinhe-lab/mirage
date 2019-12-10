@@ -16,14 +16,17 @@ knitr::opts_chunk$set(collapse = TRUE,comment = "#",fig.width = 4.5,
 ```
 
 
-Here is a minimal example for `mirage`. First load a test toy data-set,
+
+
+
+Here is a minimal example for `mirage`. First load  test toy data-sets,
 
 ```{r}
 library(mirage)
 data(mirage_toy)
 head(mirage_toy)
-n1 = 1500
-n2 = 1500
+data(mirage_vs_toy)
+head(mirage_vs_toy)
 ```
 Then anaylze with `mirage`
 
