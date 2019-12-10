@@ -4,6 +4,9 @@ navbar:
       href: articles/mwe.html
     - text: "Functions"
       href: reference/index.html
+    - text: "Method Tutorial"
+      href: articles/methodtutorial.html
+
   right:
     - text: "Source"
       href: https://github.com/xinhe-lab/mirage
@@ -12,9 +15,8 @@ template:
     bootswatch: readable
 articles:
   - title: "Vignettes"
-    desc: >
-      The following vignettes provide illustrations of the
-      mirage package, as well as guidance on correct application of the
-      statistical methods.
     contents:
     - mwe
+  - title: "Method Tutorial"
+    contents: 
+    - methodtutorial

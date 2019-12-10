@@ -1,24 +1,25 @@
-#' Mixture model based rare variant analysis
+#' mirage: MIxture model based Rare variant Analysis on GEnes
 #'
-#' This function implements rare variant test with full MIRAGE model
+#' This function implements rare variant test with full MIRAGE model with both variant and gene level 
 #'
-#' @param data variant count data, a 5 column data frame for 1) locus ID, 2) Gene  3) count in group 1, 
-#' 4) count in group 2 and 5) category for a variant. The 4th column is optional.
-#' @param n1 sample size for group 1; either an integer number if all variants have the same sample size, or a vector
-#' of length of number of variants to specify sample size for each variant.
-#' @param n2 sample size for group 2; either an integer number if all variants have the same sample size, or a vector
-#' of length of number of variants to specify sample size for each variant.
-#' @param gamma a list of category specific shape parameter for effect size prior, or a numeric value if all category share the same effect size.
-#' @param sigma a list of category specific scale parameter for effect size prior, or a numeric value if all category share the same effect size.
-#' @param delta.init initial value for prior on proportion of risk genes.
-#' @param eta.init initial value for prior on proportion of risk variants in a risk gene.
-#' @return \item{BF}{Bayes factor of genes}
+#' @param data variant count data, a 5 column data frame for 1) locus ID, 2) Gene  3) count in cases, 
+#' 4) count in controls and 5) variant category index for a variant. The 1st column is optional.
+#' @param n1 sample size in cases.
+#' @param n2 sample size in controls.
+#' @param gamma a list of category specific hyper prior shape parameter in Beta distribution  for effect size, or a numeric value if all category share the same effect size.
+#' @param sigma a list of category specific hyper prior scale parameter in Beta distribution for effect size, or a numeric value if all category share the same effect size.
+#' @param delta.init initial value for prior on proportion of risk genes. Must be a positive number between 0 and 1. 
+#' @param eta.init initial value for prior on proportion of risk variants in a variant set.
+#' @param estimate.delta When TRUE delta is to be estimated and FALSE delta is fixed at delta.init
+#' @param max.iter maximum number of iterations enforcing EM algorithm to stop 
+#' @param tol threshold of parameter estimate difference to determine the convergence of EM algorithm  
+#' 
+#' @return \item{BF.gene}{Bayes factor of genes}
 #' \item{delta.est}{Estimate for proportion of risk genes}
 #' \item{delta.pvalue}{Significant test for delta = 0}
 #' \item{eta.est}{Estimate for proportion of risk variants in a variant group}
 #' \item{eta.pvalue}{Significant test for eta = 0}
-#' \item{BF.gene}{Bayes factor for each gene}
-#' \item{BF.all}{Bayes factor for each variant}
+#' \item{BF.all}{a list of Bayes factor for all variants in a gene}
 #' @examples
 #' # see example at https://xinhe-lab.github.io/mirage/articles/mwe.html
 #' @importFrom progress progress_bar
@@ -200,19 +201,21 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
 }
 
 ###############################################################
-#' Mixture model based rare variant analysis
+#' mirage: MIxture model based Rare variant Analysis on GEnes
 #'
-#' This function implements rare variant test with MIRAGE model for variant set 
+#' This function implements rare variant test with MIRAGE model for variant set only without gene level information  
 #'
-#' @param data variant count data, a 4 column data frame for 1) locus ID  2) count in group 1, 
-#' 3) count in group 2 and 4) category for a variant. The 4th column is optional.
-#' @param n1 sample size for group 1; either an integer number if all variants have the same sample size, or a vector
-#' of length of number of variants to specify sample size for each variant.
-#' @param n2 sample size for group 2; either an integer number if all variants have the same sample size, or a vector
-#' of length of number of variants to specify sample size for each variant.
-#' @param gamma a list of category specific shape parameter for effect size prior, or a numeric value if all category share the same effect size.
-#' @param sigma a list of category specific scale parameter for effect size prior, or a numeric value if all category share the same effect size.
-#' @param eta.init initial value for prior on proportion of risk variants in a variant category
+#' @param data variant count data, a 4 column data frame for 1) locus ID  2) variant count in cases, 
+#' 3) variant count in control and 4) variant category index for a variant. The 1st column is optional.
+#' @param n1 sample size in cases.
+#' @param n2 sample size in controls.
+#' @param gamma a list of category specific hyper prior shape parameter in Beta distribution  for effect size, or a numeric value if all category share the same effect size.
+#' @param sigma a list of category specific hyper prior scale parameter in Beta distribution for effect size, or a numeric value if all category share the same effect size.
+#' @param eta.init initial value for prior on proportion of risk variants in a variant set.
+#' @param max.iter maximum number of iterations enforcing EM algorithm to stop 
+#' @param tol threshold of parameter estimate difference to determine the convergence of EM algorithm
+#' 
+#' 
 #' @return \item{full.info}{Bayes factor of individual variant}
 #' \item{eta.est}{Estimate for proportion of risk variants in a variant group}
 #' \item{eta.pvalue}{Significant test for eta = 0}

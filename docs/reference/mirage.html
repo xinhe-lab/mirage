@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mixture model based rare variant analysis — mirage • mirage</title>
+<title>mirage: MIxture model based Rare variant Analysis on GEnes — mirage • mirage</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
 
 
-<meta property="og:title" content="Mixture model based rare variant analysis — mirage" />
+<meta property="og:title" content="mirage: MIxture model based Rare variant Analysis on GEnes — mirage" />
 
-<meta property="og:description" content="This function implements rare variant test with full MIRAGE model" />
+<meta property="og:description" content="This function implements rare variant test with full MIRAGE model with both variant and gene level" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -78,6 +78,9 @@
 <li>
   <a href="../reference/index.html">Functions</a>
 </li>
+<li>
+  <a href="../articles/methodtutorial.html">Method Tutorial</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -97,14 +100,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Mixture model based rare variant analysis</h1>
+    <h1>mirage: MIxture model based Rare variant Analysis on GEnes</h1>
     <small class="dont-index">Source: <a href='https://github.com/xinhe-lab/mirage/blob/master/R/mirage.R'><code>R/mirage.R</code></a></small>
     <div class="hidden name"><code>mirage.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function implements rare variant test with full MIRAGE model</p>
+    <p>This function implements rare variant test with full MIRAGE model with both variant and gene level</p>
     
     </div>
 
@@ -117,34 +120,44 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>variant count data, a 5 column data frame for 1) locus ID, 2) Gene  3) count in group 1, 
-4) count in group 2 and 5) category for a variant. The 4th column is optional.</p></td>
+      <td><p>variant count data, a 5 column data frame for 1) locus ID, 2) Gene  3) count in cases, 
+4) count in controls and 5) variant category index for a variant. The 1st column is optional.</p></td>
     </tr>
     <tr>
       <th>n1</th>
-      <td><p>sample size for group 1; either an integer number if all variants have the same sample size, or a vector
-of length of number of variants to specify sample size for each variant.</p></td>
+      <td><p>sample size in cases.</p></td>
     </tr>
     <tr>
       <th>n2</th>
-      <td><p>sample size for group 2; either an integer number if all variants have the same sample size, or a vector
-of length of number of variants to specify sample size for each variant.</p></td>
+      <td><p>sample size in controls.</p></td>
     </tr>
     <tr>
       <th>gamma</th>
-      <td><p>a list of category specific shape parameter for effect size prior, or a numeric value if all category share the same effect size.</p></td>
+      <td><p>a list of category specific hyper prior shape parameter in Beta distribution  for effect size, or a numeric value if all category share the same effect size.</p></td>
     </tr>
     <tr>
       <th>sigma</th>
-      <td><p>a list of category specific scale parameter for effect size prior, or a numeric value if all category share the same effect size.</p></td>
+      <td><p>a list of category specific hyper prior scale parameter in Beta distribution for effect size, or a numeric value if all category share the same effect size.</p></td>
     </tr>
     <tr>
       <th>eta.init</th>
-      <td><p>initial value for prior on proportion of risk variants in a risk gene.</p></td>
+      <td><p>initial value for prior on proportion of risk variants in a variant set.</p></td>
     </tr>
     <tr>
       <th>delta.init</th>
-      <td><p>initial value for prior on proportion of risk genes.</p></td>
+      <td><p>initial value for prior on proportion of risk genes. Must be a positive number between 0 and 1.</p></td>
+    </tr>
+    <tr>
+      <th>estimate.delta</th>
+      <td><p>When TRUE delta is to be estimated and FALSE delta is fixed at delta.init</p></td>
+    </tr>
+    <tr>
+      <th>max.iter</th>
+      <td><p>maximum number of iterations enforcing EM algorithm to stop</p></td>
+    </tr>
+    <tr>
+      <th>tol</th>
+      <td><p>threshold of parameter estimate difference to determine the convergence of EM algorithm</p></td>
     </tr>
     </table>
     
@@ -152,13 +165,12 @@ of length of number of variants to specify sample size for each variant.</p></td
 
     
 
-<dt>BF</dt><dd><p>Bayes factor of genes</p></dd>
+<dt>BF.gene</dt><dd><p>Bayes factor of genes</p></dd>
 <dt>delta.est</dt><dd><p>Estimate for proportion of risk genes</p></dd>
 <dt>delta.pvalue</dt><dd><p>Significant test for delta = 0</p></dd>
 <dt>eta.est</dt><dd><p>Estimate for proportion of risk variants in a variant group</p></dd>
 <dt>eta.pvalue</dt><dd><p>Significant test for eta = 0</p></dd>
-<dt>BF.gene</dt><dd><p>Bayes factor for each gene</p></dd>
-<dt>BF.all</dt><dd><p>Bayes factor for each variant</p></dd>
+<dt>BF.all</dt><dd><p>a list of Bayes factor for all variants in a gene</p></dd>
 
     
 

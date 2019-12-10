@@ -1,0 +1,16 @@
+---
+title: "Method Tutorial"
+author: "Shengtong Han"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{minimal example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Variant set (VS) analysis 
+
+
+## Gene set analysis 

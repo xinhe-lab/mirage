@@ -2,26 +2,28 @@
 % Please edit documentation in R/mirage.R
 \name{mirage_vs}
 \alias{mirage_vs}
-\title{Mixture model based rare variant analysis}
+\title{mirage: MIxture model based Rare variant Analysis on GEnes}
 \usage{
 mirage_vs(data, n1, n2, gamma = 3, sigma = 2, eta.init = 0.1,
   max.iter = 10000, tol = 1e-05, verbose = TRUE)
 }
 \arguments{
-\item{data}{variant count data, a 4 column data frame for 1) locus ID  2) count in group 1, 
-3) count in group 2 and 4) category for a variant. The 4th column is optional.}
+\item{data}{variant count data, a 4 column data frame for 1) locus ID  2) variant count in cases, 
+3) variant count in control and 4) variant category index for a variant. The 1st column is optional.}
 
-\item{n1}{sample size for group 1; either an integer number if all variants have the same sample size, or a vector
-of length of number of variants to specify sample size for each variant.}
+\item{n1}{sample size in cases.}
 
-\item{n2}{sample size for group 2; either an integer number if all variants have the same sample size, or a vector
-of length of number of variants to specify sample size for each variant.}
+\item{n2}{sample size in controls.}
 
-\item{gamma}{a list of category specific shape parameter for effect size prior, or a numeric value if all category share the same effect size.}
+\item{gamma}{a list of category specific hyper prior shape parameter in Beta distribution  for effect size, or a numeric value if all category share the same effect size.}
 
-\item{sigma}{a list of category specific scale parameter for effect size prior, or a numeric value if all category share the same effect size.}
+\item{sigma}{a list of category specific hyper prior scale parameter in Beta distribution for effect size, or a numeric value if all category share the same effect size.}
 
-\item{eta.init}{initial value for prior on proportion of risk variants in a variant category}
+\item{eta.init}{initial value for prior on proportion of risk variants in a variant set.}
+
+\item{max.iter}{maximum number of iterations enforcing EM algorithm to stop}
+
+\item{tol}{threshold of parameter estimate difference to determine the convergence of EM algorithm}
 }
 \value{
 \item{full.info}{Bayes factor of individual variant}
@@ -29,7 +31,7 @@ of length of number of variants to specify sample size for each variant.}
 \item{eta.pvalue}{Significant test for eta = 0}
 }
 \description{
-This function implements rare variant test with MIRAGE model for variant set
+This function implements rare variant test with MIRAGE model for variant set only without gene level information
 }
 \examples{
 # see example at https://xinhe-lab.github.io/mirage/articles/mwe.html
