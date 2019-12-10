@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A minimal example • mirage</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="A minimal example">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -59,13 +60,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>A minimal example</h1>
                         <h4 class="author">Gao Wang and Shengtong Han</h4>
             
-            <h4 class="date">2019-08-29</h4>
+            <h4 class="date">2019-12-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/xinhe-lab/mirage/blob/master/vignettes/mwe.Rmd"><code>vignettes/mwe.Rmd</code></a></small>
       <div class="hidden name"><code>mwe.Rmd</code></div>
@@ -74,67 +76,46 @@
 
     
     
-<p>Here is a minimal example for <code>mirage</code>. First load a test toy data-set,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mirage)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(mirage_toy)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(mirage_toy)
-<span class="co">#                       Gene No.case No.contr group.index</span>
-<span class="co"># 1:6170545-6170545_C_T CHD5       0        1           8</span>
-<span class="co"># 1:6172217-6172217_G_A CHD5       0        1           5</span>
-<span class="co"># 1:6172260-6172260_T_C CHD5       1        2           8</span>
-<span class="co"># 1:6172265-6172265_C_T CHD5       1        0           8</span>
-<span class="co"># 1:6172266-6172266_C_A CHD5       2        2           5</span>
-<span class="co"># 1:6172289-6172289_C_A CHD5       2        2           8</span>
-n1 =<span class="st"> </span><span class="dv">1500</span>
-n2 =<span class="st"> </span><span class="dv">1500</span></code></pre></div>
+<p>Here is a minimal example for <code>mirage</code>. First load test toy data-sets,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(mirage)
+<span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(mirage_toy)
+<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(mirage_toy)
+<span class="co">#                                 ID   Gene No.case No.contr group.index</span>
+<span class="co"># 15129    6:161006077-161006077_C_T    LPA     298      272           1</span>
+<span class="co"># 169        1:11205024-11205024_C_T   MTOR       1        0           2</span>
+<span class="co"># 184        1:11272449-11272449_G_A   MTOR       0        1           2</span>
+<span class="co"># 194   1:11290989-11290994_CTGACT_C   MTOR       1        0           2</span>
+<span class="co"># 239        1:11594465-11594465_C_T PTCHD2       0        1           2</span>
+<span class="co"># 356     1:19441304-19441307_CCTT_C   UBR4       2        0           2</span>
+<span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(mirage_vs_toy)
+<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(mirage_vs_toy)
+<span class="co">#   No.case No.contr group.index</span>
+<span class="co"># 1       1        0           1</span>
+<span class="co"># 2       3        1           1</span>
+<span class="co"># 3       2        4           1</span>
+<span class="co"># 4       1        3           1</span>
+<span class="co"># 5       1        0           1</span>
+<span class="co"># 6       2        0           1</span></code></pre></div>
 <p>Then anaylze with <code>mirage</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res =<span class="st"> </span><span class="kw"><a href="../reference/mirage.html">mirage</a></span>(mirage_toy,n1,n2)
-<span class="co"># Computing gene level LRT statistics and p-values ...</span>
-<span class="co"># Computing LRT statistics and p-values by categories ...</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(res)
-<span class="co"># List of 7</span>
-<span class="co">#  $ delta.est   : num 0</span>
-<span class="co">#  $ delta.pvalue: num 1</span>
-<span class="co">#  $ eta.est     : Named num [1:5] 0 0 0 0 0</span>
-<span class="co">#   ..- attr(*, "names")= chr [1:5] "8" "5" "7" "6" ...</span>
-<span class="co">#  $ eta.pvalue  : num [1:5] 1 1 1 1 1</span>
-<span class="co">#  $ BF.gene     :'data.frame': 4 obs. of  2 variables:</span>
-<span class="co">#   ..$ Gene: Factor w/ 4 levels "CHD5","KIF1B",..: 1 4 3 2</span>
-<span class="co">#   ..$ BF  : num [1:4] 1 1 1 1</span>
-<span class="co">#  $ BF.all      :List of 4</span>
-<span class="co">#   ..$ :'data.frame':  36 obs. of  2 variables:</span>
-<span class="co">#   .. ..$ variant: Factor w/ 36 levels "1:6170545-6170545_C_T",..: 1 2 3 4 5 6 7 8 9 10 ...</span>
-<span class="co">#   .. ..$ BF     : num [1:36] 0.596 0.596 0.495 1.404 0.622 ...</span>
-<span class="co">#   ..$ :'data.frame':  30 obs. of  2 variables:</span>
-<span class="co">#   .. ..$ variant: Factor w/ 30 levels "1:10292433-10292433_A_G",..: 1 2 3 4 5 6 7 8 9 10 ...</span>
-<span class="co">#   .. ..$ BF     : num [1:30] 1.404 0.771 0.771 0.771 0.596 ...</span>
-<span class="co">#   ..$ :'data.frame':  11 obs. of  2 variables:</span>
-<span class="co">#   .. ..$ variant: Factor w/ 11 levels "1:9770617-9770617_C_G",..: 1 2 3 4 5 6 7 8 9 10 ...</span>
-<span class="co">#   .. ..$ BF     : num [1:11] 5.96e-01 1.02e-01 1.40 3.48e-06 4.22e-01 ...</span>
-<span class="co">#   ..$ :'data.frame':  23 obs. of  2 variables:</span>
-<span class="co">#   .. ..$ variant: Factor w/ 23 levels "1:8421495-8421495_C_T",..: 1 2 3 4 5 6 7 8 9 10 ...</span>
-<span class="co">#   .. ..$ BF     : num [1:23] 0.771 1.404 0.596 1.404 0.373 ...</span>
-<span class="co">#  $ Eui         : num [1:4] 0 0 0 0</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(res)</code></pre></div>
 <div id="session-information" class="section level2">
 <h2 class="hasAnchor">
 <a href="#session-information" class="anchor"></a>Session information</h2>
 <p>Here are some details about the computing environment, including the versions of R, and the R packages, used to generate these results.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/sessionInfo">sessionInfo</a></span>()
-<span class="co"># R version 3.5.3 (2019-03-11)</span>
-<span class="co"># Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co"># Running under: BunsenLabs GNU/Linux 8.9 (Hydrogen)</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()
+<span class="co"># R version 3.6.0 (2019-04-26)</span>
+<span class="co"># Platform: x86_64-w64-mingw32/x64 (64-bit)</span>
+<span class="co"># Running under: Windows 10 x64 (build 18362)</span>
 <span class="co"># </span>
 <span class="co"># Matrix products: default</span>
-<span class="co"># BLAS: /usr/lib/atlas-base/atlas/libblas.so.3.0</span>
-<span class="co"># LAPACK: /usr/lib/atlas-base/atlas/liblapack.so.3.0</span>
 <span class="co"># </span>
 <span class="co"># locale:</span>
-<span class="co">#  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">#  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">#  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
-<span class="co">#  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
-<span class="co">#  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co"># [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
+<span class="co"># [1] LC_COLLATE=English_United States.1252 </span>
+<span class="co"># [2] LC_CTYPE=English_United States.1252   </span>
+<span class="co"># [3] LC_MONETARY=English_United States.1252</span>
+<span class="co"># [4] LC_NUMERIC=C                          </span>
+<span class="co"># [5] LC_TIME=English_United States.1252    </span>
 <span class="co"># </span>
 <span class="co"># attached base packages:</span>
 <span class="co"># [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
@@ -143,18 +124,16 @@ n2 =<span class="st"> </span><span class="dv">1500</span></code></pre></div>
 <span class="co"># [1] mirage_0.1.0.0</span>
 <span class="co"># </span>
 <span class="co"># loaded via a namespace (and not attached):</span>
-<span class="co">#  [1] Rcpp_1.0.2        knitr_1.23        xml2_1.2.0       </span>
-<span class="co">#  [4] magrittr_1.5      roxygen2_6.1.1    hms_0.5.1        </span>
-<span class="co">#  [7] progress_1.2.2    MASS_7.3-51.1     R6_2.4.0         </span>
-<span class="co"># [10] rlang_0.4.0       stringr_1.4.0     tools_3.5.3      </span>
-<span class="co"># [13] xfun_0.7          htmltools_0.3.6   commonmark_1.7   </span>
-<span class="co"># [16] yaml_2.2.0        digest_0.6.20     assertthat_0.2.1 </span>
-<span class="co"># [19] rprojroot_1.3-2   tibble_2.1.1      pkgdown_1.3.0    </span>
-<span class="co"># [22] crayon_1.3.4      vctrs_0.2.0       fs_1.2.7         </span>
-<span class="co"># [25] zeallot_0.1.0     memoise_1.1.0     evaluate_0.13    </span>
-<span class="co"># [28] rmarkdown_1.13    stringi_1.4.3     pillar_1.3.1     </span>
-<span class="co"># [31] compiler_3.5.3    prettyunits_1.0.2 desc_1.2.0       </span>
-<span class="co"># [34] backports_1.1.4   pkgconfig_2.0.2</span></code></pre></div>
+<span class="co">#  [1] Rcpp_1.0.1        rstudioapi_0.10   knitr_1.23       </span>
+<span class="co">#  [4] magrittr_1.5      hms_0.4.2         progress_1.2.2   </span>
+<span class="co">#  [7] MASS_7.3-51.4     R6_2.4.0          rlang_0.4.1      </span>
+<span class="co"># [10] stringr_1.4.0     tools_3.6.0       xfun_0.7         </span>
+<span class="co"># [13] htmltools_0.3.6   yaml_2.2.0        assertthat_0.2.1 </span>
+<span class="co"># [16] digest_0.6.19     rprojroot_1.3-2   pkgdown_1.4.1    </span>
+<span class="co"># [19] crayon_1.3.4      fs_1.3.1          memoise_1.1.0    </span>
+<span class="co"># [22] evaluate_0.13     rmarkdown_1.13    stringi_1.4.3    </span>
+<span class="co"># [25] compiler_3.6.0    prettyunits_1.0.2 desc_1.2.0       </span>
+<span class="co"># [28] backports_1.1.4   pkgconfig_2.0.2</span></code></pre></div>
 </div>
   </div>
 
@@ -171,17 +150,20 @@ n2 =<span class="st"> </span><span class="dv">1500</span></code></pre></div>
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Shengtong Han, Gao Wang, Xin He.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
