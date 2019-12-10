@@ -76,7 +76,10 @@
 
     
     
-<p>Here is a minimal example for <code>mirage</code>. First load test toy data-sets,</p>
+<div id="input-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#input-data" class="anchor"></a>Input data</h2>
+<p>Here is a minimal example for <code>mirage</code>. First load two test toy data-sets, <code>mirage_vs_toy</code> is for variant set (VS) with variant level only and <code>mirage_toy</code> is for gene set with both variant level and gene level.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(mirage)
 <span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(mirage_toy)
 <span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(mirage_toy)
@@ -96,9 +99,41 @@
 <span class="co"># 4       1        3           1</span>
 <span class="co"># 5       1        0           1</span>
 <span class="co"># 6       2        0           1</span></code></pre></div>
-<p>Then anaylze with <code>mirage</code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res =<span class="st"> </span><span class="kw"><a href="../reference/mirage.html">mirage</a></span>(mirage_toy,n1,n2)
-<span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(res)</code></pre></div>
+<p>In both <code>mirage_vs_toy</code> and <code>mirage_toy</code>, every row is a variant with its summary statistics (number of variants in cases <code>No.case</code> and number of variants in control <code>No.contr</code>), variant group index <code>group.index</code> (which variant group it is from) and gene <code>Gene</code> (if any, which gene it is in) in columns. Variant groups can be user defined, usually depending on its annotations.</p>
+</div>
+<div id="output" class="section level2">
+<h2 class="hasAnchor">
+<a href="#output" class="anchor"></a>Output</h2>
+<p>Apply <code>mirage_vs</code> and <code>mirage</code> to toy data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res_vs =<span class="st"> </span><span class="kw"><a href="../reference/mirage_vs.html">mirage_vs</a></span>(mirage_vs_toy,<span class="dt">n1=</span><span class="dv">1000</span>,<span class="dt">n2=</span><span class="dv">1000</span>)
+<span class="co"># Computing LRT statistics and p-value for every variant and all as a whole ...</span>
+<span class="co"># Computing LRT statistics and p-values by categories ...</span>
+<span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(res_vs)
+<span class="co"># List of 3</span>
+<span class="co">#  $ eta.est   : Named num 0.106</span>
+<span class="co">#   ..- attr(*, "names")= chr "1"</span>
+<span class="co">#  $ full.info :'data.frame':   213 obs. of  5 variables:</span>
+<span class="co">#   ..$ ID      : int [1:213] 1 2 3 4 5 6 7 8 9 10 ...</span>
+<span class="co">#   ..$ No.case : int [1:213] 1 3 2 1 1 2 5 1 1 0 ...</span>
+<span class="co">#   ..$ No.contr: int [1:213] 0 1 4 3 0 0 4 0 2 1 ...</span>
+<span class="co">#   ..$ category: int [1:213] 1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="co">#   ..$ var.BF  : num [1:213] 1.452 1.577 0.239 0.278 1.452 ...</span>
+<span class="co">#  $ eta.pvalue: num 0.0577</span>
+res_vs<span class="op">$</span>eta.est
+<span class="co">#         1 </span>
+<span class="co"># 0.1063957</span>
+res_vs<span class="op">$</span>eta.pvalue
+<span class="co"># [1] 0.05768078</span>
+<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(res_vs<span class="op">$</span>full.info)
+<span class="co">#   ID No.case No.contr category    var.BF</span>
+<span class="co"># 1  1       1        0        1 1.4520839</span>
+<span class="co"># 2  2       3        1        1 1.5772349</span>
+<span class="co"># 3  3       2        4        1 0.2388117</span>
+<span class="co"># 4  4       1        3        1 0.2775119</span>
+<span class="co"># 5  5       1        0        1 1.4520839</span>
+<span class="co"># 6  6       2        0        1 2.1375094</span></code></pre></div>
+<p><code>n1, n2</code> are sample sizes in cases and controls. Other key parameters are set by default <span class="math inline">\(\gamma=3, \sigma=2, \eta_0=0.1\)</span> and it is up to users to choose whatever you want, but <span class="math inline">\(\eta\)</span> initial must be positive number within <span class="math inline">\((0,1)\)</span>.</p>
+</div>
 <div id="session-information" class="section level2">
 <h2 class="hasAnchor">
 <a href="#session-information" class="anchor"></a>Session information</h2>
@@ -142,7 +177,9 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#session-information">Session information</a></li>
+<li><a href="#input-data">Input data</a></li>
+      <li><a href="#output">Output</a></li>
+      <li><a href="#session-information">Session information</a></li>
       </ul>
 </div>
       </div>

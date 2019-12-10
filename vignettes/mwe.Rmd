@@ -16,10 +16,10 @@ knitr::opts_chunk$set(collapse = TRUE,comment = "#",fig.width = 4.5,
 ```
 
 
+## Input data 
 
 
-
-Here is a minimal example for `mirage`. First load  test toy data-sets,
+Here is a minimal example for `mirage`. First load  two test toy data-sets, `mirage_vs_toy` is for variant set (VS) with variant level only and `mirage_toy` is for gene set with both variant level and gene level.  
 
 ```{r}
 library(mirage)
@@ -28,12 +28,40 @@ head(mirage_toy)
 data(mirage_vs_toy)
 head(mirage_vs_toy)
 ```
-Then anaylze with `mirage`
+In both `mirage_vs_toy` and `mirage_toy`, every row is a variant with its summary statistics (number of variants in cases `No.case` and number of variants in control `No.contr`), variant group index `group.index` (which variant group it is from) and gene `Gene` (if any, which gene it is in) in columns. Variant groups can be user defined, usually depending on its annotations.  
 
-```{r, eval=F}
-res = mirage(mirage_toy,n1,n2)
-str(res)
+
+## Output 
+
+Apply `mirage_vs` and `mirage` to toy data. 
+
+```{r}
+res_vs = mirage_vs(mirage_vs_toy,n1=1000,n2=1000)
+str(res_vs)
+res_vs$eta.est
+res_vs$eta.pvalue
+head(res_vs$full.info)
 ```
+
+`n1, n2` are sample sizes in cases and controls. Other key parameters are set by default $\gamma=3, \sigma=2, \eta_0=0.1$ and it is up to users to choose whatever you want, but $\eta$ initial must be positive number within $(0,1)$.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Session information
 

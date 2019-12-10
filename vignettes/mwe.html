@@ -99,7 +99,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<p>Here is a minimal example for <code>mirage</code>. First load test toy data-sets,</p>
+<div id="input-data" class="section level2">
+<h2>Input data</h2>
+<p>Here is a minimal example for <code>mirage</code>. First load two test toy data-sets, <code>mirage_vs_toy</code> is for variant set (VS) with variant level only and <code>mirage_toy</code> is for gene set with both variant level and gene level.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mirage)
 <span class="kw">data</span>(mirage_toy)
 <span class="kw">head</span>(mirage_toy)
@@ -119,9 +121,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co"># 4       1        3           1</span>
 <span class="co"># 5       1        0           1</span>
 <span class="co"># 6       2        0           1</span></code></pre></div>
+<p>In both <code>mirage_vs_toy</code> and <code>mirage_toy</code>, every row is a variant with its summary statistics (number of variants in cases <code>No.case</code> and number of variants in control <code>No.contr</code>), variant group index <code>group.index</code> (which variant group it is from) and gene <code>Gene</code> (if any, which gene it is in) in columns. Variant groups can be user defined, usually depending on its annotations.</p>
+</div>
+<div id="output" class="section level2">
+<h2>Output</h2>
 <p>Then anaylze with <code>mirage</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res =<span class="st"> </span><span class="kw">mirage</span>(mirage_toy,n1,n2)
 <span class="kw">str</span>(res)</code></pre></div>
+</div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
 <p>Here are some details about the computing environment, including the versions of R, and the R packages, used to generate these results.</p>
