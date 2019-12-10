@@ -132,7 +132,44 @@ res_vs<span class="op">$</span>eta.pvalue
 <span class="co"># 4  4       1        3        1 0.2775119</span>
 <span class="co"># 5  5       1        0        1 1.4520839</span>
 <span class="co"># 6  6       2        0        1 2.1375094</span></code></pre></div>
-<p><code>n1, n2</code> are sample sizes in cases and controls. Other key parameters are set by default <span class="math inline">\(\gamma=3, \sigma=2, \eta_0=0.1\)</span> and it is up to users to choose whatever you want, but <span class="math inline">\(\eta\)</span> initial must be positive number within <span class="math inline">\((0,1)\)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res=<span class="kw"><a href="../reference/mirage.html">mirage</a></span>(mirage_toy,<span class="dt">n1=</span><span class="dv">4315</span>,<span class="dt">n2=</span><span class="dv">4315</span>)
+<span class="co"># Computing gene level LRT statistics and p-values ...</span>
+<span class="co"># Computing LRT statistics and p-values by categories ...</span>
+res<span class="op">$</span>delta.est
+<span class="co"># [1] 0.925347</span>
+res<span class="op">$</span>delta.pvalue
+<span class="co"># [1] 0.4008102</span>
+res<span class="op">$</span>eta.est
+<span class="co">#             1             2             3             4             5 </span>
+<span class="co">#  0.000000e+00  1.030961e-01 4.940656e-324 1.976263e-323  7.871498e-02</span>
+res<span class="op">$</span>eta.pvalue
+<span class="co"># [1] 1.0000000 0.4206792 1.0000000 1.0000000 0.2782136</span></code></pre></div>
+<p><code>n1, n2</code> are sample sizes in cases and controls. Other parameters are set by default. See parameter settings below.</p>
+</div>
+<div id="parameter-setting" class="section level2">
+<h2 class="hasAnchor">
+<a href="#parameter-setting" class="anchor"></a>Parameter setting</h2>
+<p>By default, <span class="math inline">\(\gamma=3, \sigma=2, \eta_0=0.1\)</span> and it is up to users to choose whatever you want, but <span class="math inline">\(\eta\)</span> initial must be a positive number within <span class="math inline">\((0,1)\)</span>. The full argument are <code><a href="../reference/mirage_vs.html">mirage_vs(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, max.iter = 10000, tol = 1e-05, verbose = TRUE)</a></code> and <code><a href="../reference/mirage.html">mirage(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, max.iter = 10000, tol = 1e-05, verbose = TRUE)</a></code></p>
+<ul>
+<li>
+<code>data</code>: the input data with format as the toy example.</li>
+<li>
+<code>n1, n2</code>: sample sizes in cases and controls.</li>
+<li>
+<code>gamma, sigma</code>: two hyperprior parameters in Beta distributions to generate relative risk (RR).</li>
+<li>
+<code>eta.init</code>: <span class="math inline">\(\eta\)</span> initial to run EM algorithm, must be a number between 0 and 1.<br>
+</li>
+<li>
+<code>delta.init, estimate.delta</code>: When <code>estimate.delta=T</code> <span class="math inline">\(\delta\)</span> initial to run EM algorithm, must be between 0 and 1. It could be a scalar or a vector with <span class="math inline">\(k\)</span> entry corresponding for <span class="math inline">\(k\)</span> th variant group. When it is a scalar, all variant groups share the same inital. When <code>estimate.delta=F</code> <span class="math inline">\(\delta\)</span> will be fixed at <code>delta.init</code>, thus adding more flexibility to users.<br>
+</li>
+<li>
+<code>max.iter</code>: maximum number of iterations of EM algorithm, which will be enforced to stop when it reaches the max.iter, but in most cases, it converges fast, far less than <span class="math inline">\(10^4\)</span>.</li>
+<li>
+<code>tol</code>: the threshold for which the differenece of parameter estimates between current iteration and the next is less than, EM will stop.</li>
+<li>
+<code>verbose</code>: algorithm progress indicator.</li>
+</ul>
 </div>
 <div id="session-information" class="section level2">
 <h2 class="hasAnchor">
@@ -179,6 +216,7 @@ res_vs<span class="op">$</span>eta.pvalue
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#input-data">Input data</a></li>
       <li><a href="#output">Output</a></li>
+      <li><a href="#parameter-setting">Parameter setting</a></li>
       <li><a href="#session-information">Session information</a></li>
       </ul>
 </div>

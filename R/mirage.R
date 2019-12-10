@@ -122,7 +122,8 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
     }  # end of i
     
     ############## EM algorithm: M step
-    delta.est[iter]=sum(EUi)/num.gene
+    delta.est[iter]=ifelse(estimate.delta==T, sum(EUi)/num.gene, delta.init) # either estimate delta when estimate.delta=T or use fixed delta.init when estimate.delta=F
+    
     for (g in 1:num.group)
     {
       if (sum(total.Ui[,g])!=0)
