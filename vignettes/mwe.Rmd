@@ -30,7 +30,7 @@ head(mirage_vs_toy)
 ```
 Then anaylze with `mirage`
 
-```{r}
+```{r, eval=F}
 res = mirage(mirage_toy,n1,n2)
 str(res)
 ```
