@@ -20,6 +20,8 @@ knitr::opts_chunk$set(collapse = TRUE,comment = "#",fig.width = 4.5,
 
 ## References 
 
+A Bayesian method for rare variant analysis using functional annotations and its application to Autism: https://www.biorxiv.org/content/10.1101/828061v1
+
 ## Examples  
 
 
