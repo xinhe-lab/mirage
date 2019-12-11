@@ -9,9 +9,54 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+MIRAGE is able to analyze both variant set and gene set, although its name focus on gene set. Mixture model is ultilized to model the risk uncertainty of either a variant or a gene and the risk probability depends on the annotations. We will start with a simple case-variant set.     
 
 ## Variant set (VS) analysis 
+Suppose there are $K$ variant groups and let's focus on one variant group only. Variant $j$ in the group is modeled a mixture of risk variant and non-risk variant following Bernoulli distribution 
 
+$$P(Z_j=1)=\eta$$
+$Z_j$ is a binary variable indicating it's a risk variant $Z_j=1$ and non-risk $Z_j=0$. All variants within the same group are assumed to be homogeneous sharing similar effect size and $\eta$ is the proportion of risk variants in the group.  
 
 
 ## Gene set analysis 
+
+In a gene set, every gene is modeled as a mixture of risk gene and non-risk gene as 
+
+$$P(U_i=1)=\delta$$
+
+gene $i$ is a risk gene when $U_i=1$ and non-risk gene $U_i=0$. $\delta$ is the proportion of risk genes in the gene set.  If gene $i$ is a risk gene, its variant $(i,j)$ is from variant group $k$, then 
+$$P(Z_{ij}=1)=\eta_k$$
+
+$\eta_k$ is the proportion of risk variants in variant group $k$ where variants may be from multipe different genes. More details can be found in reference. 
+
+
+## References 
+
+A Bayesian method for rare variant analysis using functional annotations and its application to Autism: https://www.biorxiv.org/content/10.1101/828061v1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
