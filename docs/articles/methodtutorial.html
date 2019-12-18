@@ -67,7 +67,7 @@
       <h1>Method Tutorial</h1>
                         <h4 class="author">Shengtong Han</h4>
             
-            <h4 class="date">2019-12-11</h4>
+            <h4 class="date">2019-12-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/xinhe-lab/mirage/blob/master/vignettes/methodtutorial.Rmd"><code>vignettes/methodtutorial.Rmd</code></a></small>
       <div class="hidden name"><code>methodtutorial.Rmd</code></div>
@@ -76,16 +76,18 @@
 
     
     
-<p>MIRAGE is able to analyze both variant set and gene set, although its name focus on gene set. Mixture model is ultilized to model the risk uncertainty of either a variant or a gene and the risk probability depends on the annotations. We will start with a simple case-variant set.</p>
-<div id="variant-set-vs-analysis" class="section level2">
+<p><code>MIRAGE</code> is able to analyze both variant set and gene set, although its name focus on gene set. Mixture model is ultilized to model the risk uncertainty of either a variant or a gene and the risk probability depends on the annotations. We will start with a simple case-variant set.</p>
+<div id="variant-set-vs-analysis-mirage_vs" class="section level2">
 <h2 class="hasAnchor">
-<a href="#variant-set-vs-analysis" class="anchor"></a>Variant set (VS) analysis</h2>
+<a href="#variant-set-vs-analysis-mirage_vs" class="anchor"></a>Variant set (VS) analysis <code>mirage_vs</code>
+</h2>
 <p>Suppose there are <span class="math inline">\(K\)</span> variant groups and let’s focus on one variant group only. Variant <span class="math inline">\(j\)</span> in the group is modeled a mixture of risk variant and non-risk variant following Bernoulli distribution</p>
 <p><span class="math display">\[P(Z_j=1)=\eta\]</span> <span class="math inline">\(Z_j\)</span> is a binary variable indicating it’s a risk variant <span class="math inline">\(Z_j=1\)</span> and non-risk <span class="math inline">\(Z_j=0\)</span>. All variants within the same group are assumed to be homogeneous sharing similar effect size and <span class="math inline">\(\eta\)</span> is the proportion of risk variants in the group.</p>
 </div>
-<div id="gene-set-analysis" class="section level2">
+<div id="gene-set-analysis-mirage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#gene-set-analysis" class="anchor"></a>Gene set analysis</h2>
+<a href="#gene-set-analysis-mirage" class="anchor"></a>Gene set analysis <code>mirage</code>
+</h2>
 <p>In a gene set, every gene is modeled as a mixture of risk gene and non-risk gene as</p>
 <p><span class="math display">\[P(U_i=1)=\delta\]</span></p>
 <p>gene <span class="math inline">\(i\)</span> is a risk gene when <span class="math inline">\(U_i=1\)</span> and non-risk gene <span class="math inline">\(U_i=0\)</span>. <span class="math inline">\(\delta\)</span> is the proportion of risk genes in the gene set. If gene <span class="math inline">\(i\)</span> is a risk gene, its variant <span class="math inline">\((i,j)\)</span> is from variant group <span class="math inline">\(k\)</span>, then <span class="math display">\[P(Z_{ij}=1)=\eta_k\]</span></p>
@@ -103,8 +105,8 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#variant-set-vs-analysis">Variant set (VS) analysis</a></li>
-      <li><a href="#gene-set-analysis">Gene set analysis</a></li>
+<li><a href="#variant-set-vs-analysis-mirage_vs">Variant set (VS) analysis <code>mirage_vs</code></a></li>
+      <li><a href="#gene-set-analysis-mirage">Gene set analysis <code>mirage</code></a></li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>

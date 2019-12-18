@@ -1,5 +1,5 @@
 ---
-title: "mirage"
+title: "Illustrative examples"
 author: "Gao Wang and Shengtong Han"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
