@@ -4,9 +4,19 @@
 \alias{mirage}
 \title{mirage: MIxture model based Rare variant Analysis on GEnes}
 \usage{
-mirage(data, n1, n2, gamma = 3, sigma = 2, eta.init = 0.1,
-  delta.init = 0.1, estimate.delta = TRUE, max.iter = 10000,
-  tol = 1e-05, verbose = TRUE)
+mirage(
+  data,
+  n1,
+  n2,
+  gamma = 3,
+  sigma = 2,
+  eta.init = 0.1,
+  delta.init = 0.1,
+  estimate.delta = TRUE,
+  max.iter = 10000,
+  tol = 1e-05,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{data}{variant count data, a 5 column data frame for 1) locus ID, 2) Gene  3) count in cases, 

@@ -18,14 +18,14 @@ knitr::opts_chunk$set(collapse = TRUE,comment = "#",fig.width = 4.5,
 
 
 
-## References 
+## References
 
 A Bayesian method for rare variant analysis using functional annotations and its application to Autism: https://www.biorxiv.org/content/10.1101/828061v1
 
-## Examples  
+## Examples
 
 
-Here is a minimal example for `mirage`. First load  two test toy data-sets, `mirage_vs_toy` is for variant set (VS) with variant level only and `mirage_toy` is for gene set with both variant level and gene level.  
+Here is a minimal example for `mirage`. First load  two test toy data-sets, `mirage_vs_toy` is for variant set (VS) with variant level only and `mirage_toy` is for gene set with both variant level and gene level.
 
 ```{r}
 library(mirage)
@@ -34,11 +34,9 @@ head(mirage_toy)
 data(mirage_vs_toy)
 head(mirage_vs_toy)
 ```
-In both `mirage_vs_toy` and `mirage_toy`, every row is a variant with its summary statistics (number of variants in cases `No.case` and number of variants in control `No.contr`), variant group index `group.index` (which variant group it is from) and gene `Gene` (if any, which gene it is in) in columns. Variant groups can be user defined, usually depending on its annotations.  
+In both `mirage_vs_toy` and `mirage_toy`, every row is a variant with its summary statistics (`No.case`, how many times the variant appears in cases, `No.contr`, how many times the variant appears in controls --- you can compute these quantities from your data), variant group index `group.index` (which variant group it is from) and gene `Gene` (if any, which gene it is in) in columns. Variant groups can be user defined, usually depending on its annotations. For example one can define a variant group "rare LoF" for a loss-of-function variant ( the union of stop loss, stop gain, frameshift indels and splice site substitutions) having minor allele frequency <1%.
 
-
-
-Apply `mirage_vs` and `mirage` to toy data. 
+Apply `mirage_vs` and `mirage` to toy data.
 
 ```{r}
 res_vs = mirage_vs(mirage_vs_toy,n1=1000,n2=1000)
