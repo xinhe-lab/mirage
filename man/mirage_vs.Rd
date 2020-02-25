@@ -4,17 +4,8 @@
 \alias{mirage_vs}
 \title{mirage: MIxture model based Rare variant Analysis on GEnes}
 \usage{
-mirage_vs(
-  data,
-  n1,
-  n2,
-  gamma = 3,
-  sigma = 2,
-  eta.init = 0.1,
-  max.iter = 10000,
-  tol = 1e-05,
-  verbose = TRUE
-)
+mirage_vs(data, n1, n2, gamma = 3, sigma = 2, eta.init = 0.1,
+  max.iter = 10000, tol = 1e-05, verbose = TRUE)
 }
 \arguments{
 \item{data}{variant count data, a 4 column data frame for 1) locus ID  2) variant count in cases, 

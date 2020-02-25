@@ -67,7 +67,7 @@
       <h1>Method Tutorial</h1>
                         <h4 class="author">Shengtong Han</h4>
             
-            <h4 class="date">2020-02-24</h4>
+            <h4 class="date">2020-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/xinhe-lab/mirage/blob/master/vignettes/methodtutorial.Rmd"><code>vignettes/methodtutorial.Rmd</code></a></small>
       <div class="hidden name"><code>methodtutorial.Rmd</code></div>
@@ -82,7 +82,8 @@
 <a href="#variant-set-vs-analysis-mirage_vs" class="anchor"></a>Variant set (VS) analysis <code>mirage_vs</code>
 </h2>
 <p>Suppose there are <span class="math inline">\(K\)</span> variant groups and let’s focus on one variant group only. Variant <span class="math inline">\(j\)</span> in the group is modeled a mixture of risk variant and non-risk variant following Bernoulli distribution</p>
-<p><span class="math display">\[P(Z_j=1)=\eta\]</span> <span class="math inline">\(Z_j\)</span> is a binary variable indicating it’s a risk variant <span class="math inline">\(Z_j=1\)</span> and non-risk <span class="math inline">\(Z_j=0\)</span>. All variants within the same group are assumed to be homogeneous sharing similar effect size and <span class="math inline">\(\eta\)</span> is the proportion of risk variants in the group.</p>
+<p><span class="math display">\[P(Z_j=1)=\eta\]</span> <span class="math inline">\(Z_j\)</span> is a binary variable indicating it’s a risk variant <span class="math inline">\(Z_j=1\)</span> and non-risk <span class="math inline">\(Z_j=0\)</span>. All variants within the same group are assumed to be homogeneous sharing similar effect size and <span class="math inline">\(\eta\)</span> is the proportion of risk variants in the group. The posterior probability (PP) of being a risk variant is</p>
+<p><span class="math display">\[P(Z_j=1|X_j, T_j)=\frac{P(Z_j=1, X_j, T_j)}{P(X_j, T_j)}=\frac{\eta BF_j}{\eta BF_j+1-\eta}\]</span> where <span class="math inline">\(BF_j=\frac{P(X_j, T_j|Z_j=1)}{P(X_j, T_j|Z_j=0)}\)</span>, is the Bayes factor of variant <span class="math inline">\(j\)</span>, <span class="math inline">\(X_j, T_j\)</span> are rare allele counts in cases and both cases and controls respectively.</p>
 </div>
 <div id="gene-set-analysis-mirage" class="section level2">
 <h2 class="hasAnchor">
@@ -91,7 +92,9 @@
 <p>In a gene set, every gene is modeled as a mixture of risk gene and non-risk gene as</p>
 <p><span class="math display">\[P(U_i=1)=\delta\]</span></p>
 <p>gene <span class="math inline">\(i\)</span> is a risk gene when <span class="math inline">\(U_i=1\)</span> and non-risk gene <span class="math inline">\(U_i=0\)</span>. <span class="math inline">\(\delta\)</span> is the proportion of risk genes in the gene set. If gene <span class="math inline">\(i\)</span> is a risk gene, its variant <span class="math inline">\((i,j)\)</span> is from variant group <span class="math inline">\(k\)</span>, then <span class="math display">\[P(Z_{ij}=1)=\eta_k\]</span></p>
-<p><span class="math inline">\(\eta_k\)</span> is the proportion of risk variants in variant group <span class="math inline">\(k\)</span> where variants may be from multipe different genes. More details can be found in reference.</p>
+<p><span class="math inline">\(\eta_k\)</span> is the proportion of risk variants in variant group <span class="math inline">\(k\)</span> where variants may be from multipe different genes. The posterior probability (PP) is</p>
+<p><span class="math display">\[PP_i=\frac{\delta B_i}{\delta B_i+1-\delta}\]</span></p>
+<p><span class="math inline">\(B_i\)</span> is the Bayes factor of gene <span class="math inline">\(i\)</span>. More details can be found in the reference.</p>
 </div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
@@ -101,7 +104,6 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
