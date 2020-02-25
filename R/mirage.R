@@ -14,7 +14,7 @@
 #' @param max.iter maximum number of iterations enforcing EM algorithm to stop 
 #' @param tol threshold of parameter estimate difference to determine the convergence of EM algorithm  
 #' 
-#' @return \item{BF.gene}{Bayes factor of genes}
+#' @return \item{BF.PP.gene}{Bayes factor and posterior probability  of genes}
 #' \item{delta.est}{Estimate for proportion of risk genes}
 #' \item{delta.pvalue}{Significant test for delta = 0}
 #' \item{eta.est}{Estimate for proportion of risk variants in a variant group}
@@ -221,6 +221,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
 #' @return \item{full.info}{Bayes factor of individual variant}
 #' \item{eta.est}{Estimate for proportion of risk variants in a variant group}
 #' \item{eta.pvalue}{Significant test for eta = 0}
+#' \item{post.prob}{posterior probability of variants}
 #' @examples
 #' # see example at https://xinhe-lab.github.io/mirage/articles/mwe.html
 #' @importFrom progress progress_bar

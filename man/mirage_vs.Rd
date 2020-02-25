@@ -29,6 +29,7 @@ mirage_vs(data, n1, n2, gamma = 3, sigma = 2, eta.init = 0.1,
 \item{full.info}{Bayes factor of individual variant}
 \item{eta.est}{Estimate for proportion of risk variants in a variant group}
 \item{eta.pvalue}{Significant test for eta = 0}
+\item{post.prob}{posterior probability of variants}
 }
 \description{
 This function implements rare variant test with MIRAGE model for variant set only without gene level information

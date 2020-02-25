@@ -31,7 +31,7 @@ mirage(data, n1, n2, gamma = 3, sigma = 2, eta.init = 0.1,
 \item{tol}{threshold of parameter estimate difference to determine the convergence of EM algorithm}
 }
 \value{
-\item{BF.gene}{Bayes factor of genes}
+\item{BF.PP.gene}{Bayes factor and posterior probability  of genes}
 \item{delta.est}{Estimate for proportion of risk genes}
 \item{delta.pvalue}{Significant test for delta = 0}
 \item{eta.est}{Estimate for proportion of risk variants in a variant group}
