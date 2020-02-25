@@ -327,15 +327,22 @@ mirage_vs=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, max.iter = 1000
     cat("Computing LRT statistics and p-value for every variant and all as a whole ...\n")
   lkhd=rep(1,num.var); total.lkhd=0
   teststat=numeric(); pvalue=numeric()
+  pp=numeric() # pp:posterior probability
   
   if (nrow(full.info.var)>0)
     for (j in 1:nrow(full.info.var))
     {
       category=full.info.var$group.index[j]
       if (num.group>1)
+      {
         lkhd[j]=lkhd[j]*((1-eta.k[max.iter, category])+eta.k[max.iter, category]*full.info.var$var.BF[j])
+        pp[j]=(eta.k[max.iter, category]*full.info.var$var.BF[j])/(eta.k[max.iter, category]*full.info.var$var.BF[j]+1-eta.k[max.iter, category])
+      }  
       if (num.group==1)
+      {
         lkhd[j]=lkhd[j]*((1-eta.k[max.iter])+eta.k[max.iter]*full.info.var$var.BF[j])
+        pp[j]=(eta.k[max.iter]*full.info.var$var.BF[j])/(eta.k[max.iter]*full.info.var$var.BF[j]+1-eta.k[max.iter])
+      }  
       
       teststat[j]=2*log(lkhd[j]); # this is the test statistics of one gene
       total.lkhd=total.lkhd+log(lkhd[j])
