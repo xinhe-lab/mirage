@@ -197,7 +197,9 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   ##############################################
   return(result = list(delta.est = delta.est[max.iter], delta.pvalue = pvalue[length(pvalue)], 
                        eta.est = eta.k[max.iter, ], eta.pvalue = cate.pvalue, 
-                       BF.gene = data.frame(Gene = unique.gene, BF = BF.gene[max.iter, ]), BF.all = full.info.genevar, Eui = EUi))
+                       BF.PP.gene = data.frame(Gene = unique.gene, BF = BF.gene[max.iter, ], 
+                                               post.prob=(delta.est[max.iter]* BF.gene[max.iter, ])/(delta.est[max.iter]* BF.gene[max.iter, ]+1-delta.est[max.iter])),
+                       BF.all = full.info.genevar, Eui = EUi))
 }
 
 ###############################################################
