@@ -380,7 +380,7 @@ mirage_vs=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, max.iter = 1000
       cate.pvalue[1]=pchisq(cate.stat, 1, lower.tail=F)
       
   }
-  return(result=list(eta.est=eta.k[max.iter,], full.info=full.info.var, eta.pvalue=cate.pvalue))
+  return(result=list(eta.est=eta.k[max.iter,], full.info=full.info.var, eta.pvalue=cate.pvalue, post.prob=pp))
   
 }
 
