@@ -54,6 +54,7 @@ res$delta.est
 res$delta.pvalue
 res$eta.est
 res$eta.pvalue
+head(res$BF.PP.gene)
 ```
 
 
