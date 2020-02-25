@@ -41,9 +41,10 @@ Apply `mirage_vs` and `mirage` to toy data.
 ```{r}
 res_vs = mirage_vs(mirage_vs_toy,n1=1000,n2=1000)
 str(res_vs)
-res_vs$eta.est
-res_vs$eta.pvalue
-head(res_vs$full.info)
+res_vs$eta.est  # parameter estimate 
+res_vs$eta.pvalue # p value 
+head(res_vs$full.info) # variant information 
+head(res_vs$post.prob) # posterior probability (PP) of variant 
 ```
 
 

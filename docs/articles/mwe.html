@@ -121,19 +121,21 @@
 <span class="co">#   ..$ var.BF  : num [1:213] 1.452 1.577 0.239 0.278 1.452 ...</span>
 <span class="co">#  $ eta.pvalue: num 0.0577</span>
 <span class="co">#  $ post.prob : num [1:213] 0.1474 0.1581 0.0276 0.032 0.1474 ...</span>
-res_vs<span class="op">$</span>eta.est
+res_vs<span class="op">$</span>eta.est  <span class="co"># parameter estimate </span>
 <span class="co">#         1 </span>
 <span class="co"># 0.1063957</span>
-res_vs<span class="op">$</span>eta.pvalue
+res_vs<span class="op">$</span>eta.pvalue <span class="co"># p value </span>
 <span class="co"># [1] 0.05768078</span>
-<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(res_vs<span class="op">$</span>full.info)
+<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(res_vs<span class="op">$</span>full.info) <span class="co"># variant information </span>
 <span class="co">#   ID No.case No.contr category    var.BF</span>
 <span class="co"># 1  1       1        0        1 1.4520839</span>
 <span class="co"># 2  2       3        1        1 1.5772349</span>
 <span class="co"># 3  3       2        4        1 0.2388117</span>
 <span class="co"># 4  4       1        3        1 0.2775119</span>
 <span class="co"># 5  5       1        0        1 1.4520839</span>
-<span class="co"># 6  6       2        0        1 2.1375094</span></code></pre></div>
+<span class="co"># 6  6       2        0        1 2.1375094</span>
+<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(res_vs<span class="op">$</span>post.prob) <span class="co"># posterior probability (PP) of variant </span>
+<span class="co"># [1] 0.14740532 0.15810118 0.02764764 0.03198473 0.14740532 0.20286933</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res=<span class="kw"><a href="../reference/mirage.html">mirage</a></span>(mirage_toy,<span class="dt">n1=</span><span class="dv">4315</span>,<span class="dt">n2=</span><span class="dv">4315</span>)
 <span class="co"># Computing gene level LRT statistics and p-values ...</span>
 <span class="co"># Computing LRT statistics and p-values by categories ...</span>
