@@ -26,4 +26,4 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

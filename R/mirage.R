@@ -71,6 +71,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
         
       }
     full.info.genevar[[i]]=cbind(indi.gene, var.BF)
+    indi.gene.BF=ifelse(indi.gene.BF==Inf, 3*10^300, indi.gene.BF) # set to the limit value when overflow
     BF.gene[1, i]=indi.gene.BF
     
     pb$tick(tokens = list(total = num.gene, unit = i))
@@ -108,6 +109,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
           
         }
       EUiZij[[i]]=UiZij
+      bb=ifelse(bb==Inf, 3*10^300, bb) # set to the limit value when overflow
       BF.gene[iter,i]=bb
       EUi[i]=delta.est[prev_iter]*bb/(delta.est[prev_iter]*bb+1-delta.est[prev_iter])
       ######################
@@ -263,7 +265,7 @@ mirage_vs=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, max.iter = 1000
     {
       category=var.index.list[j]  # category for variant j
       var.BF[j]=BF.var.inte(data$No.case[j], data$No.contr[j], ifelse(length(gamma)>1, gamma[category], gamma), ifelse(length(sigma)>1, sigma[category], sigma), n1, n2) # use uniform sigma/bar.gamma or category specific
-    
+      var.BF[j]=ifelse(var.BF[j]==Inf, 3*10^300, var.BF[j])
     }
   full.info.var=cbind(data, var.BF)
   #########################################
