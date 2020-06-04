@@ -33,6 +33,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   if (ncol(data) != 5) stop("Input data should have 4 or 5 columns!")
   
   names(data) = c("ID", "Gene", "No.case", "No.contr", "category")
+  data=data[order(data$category, decreasing = F),]
   gene.list=data$Gene
   unique.gene = unique(gene.list)
   num.gene = length(unique.gene)
