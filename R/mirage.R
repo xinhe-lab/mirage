@@ -209,7 +209,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   colnames(eta.k)=original.group.index
   for (i in 1:length(full.info.genevar))
     for (j in 1:nrow(full.info.genevar[[i]]))
-      full.info.genevar[[i]]$category[j]=original.group.index[j]
+      full.info.genevar[[i]]$category[j]=original.group.index[full.info.genevar[[i]]$category[j]]
   ##############
   
   return(result = list(delta.est = delta.est[max.iter], delta.pvalue = pvalue[length(pvalue)], 
