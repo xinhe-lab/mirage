@@ -36,8 +36,8 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   
   ################# re-index orignal group index to new consecutive index 
   original.group.index=unique(data$category)
-  for (i in 1:length(original.group.index))
-    data[data$category==original.group.index[i],]$category=i
+  for (i in 1:nrow(data))
+    data$category[i]=which(data$category[i]==original.group.index) 
   #################
   
   
