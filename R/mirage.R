@@ -68,18 +68,18 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   {
     var.index.list=which(gene.list==unique.gene[i]) # extract all variant index for a gene 
     indi.gene=data[var.index.list,]
-    indi.gene.BF=1; var.BF=numeric()
+    indi.gene.BF=1; var.BF=numeric(); original.index=numeric()
     if (length(var.index.list)>0) # calculate Bayes factor for variant (i,j)
       for (j in 1:length(var.index.list))
       {
         var.index=var.index.list[j]
         category=data$category[var.index]
-        original.index=original.group.index[category]
-        var.BF[j]=BF.var.inte(data$No.case[var.index], data$No.contr[var.index], ifelse(length(gamma)>1, gamma[original.index], gamma), ifelse(length(sigma)>1, sigma[original.index], sigma), n1, n2) # use uniform sigma/bar.gamma or category specific
+        original.index[j]=original.group.index[category]
+        var.BF[j]=BF.var.inte(data$No.case[var.index], data$No.contr[var.index], ifelse(length(gamma)>1, gamma[original.index[j]], gamma), ifelse(length(sigma)>1, sigma[original.index[j]], sigma), n1, n2) # use uniform sigma/bar.gamma or category specific
         indi.gene.BF=indi.gene.BF*((1-eta.k[1, category])+eta.k[1, category]*var.BF[j])
         
       }
-    full.info.genevar[[i]]=cbind(indi.gene, var.BF)
+    full.info.genevar[[i]]=cbind(indi.gene, var.BF, original.index)
     indi.gene.BF=ifelse(indi.gene.BF==Inf, 3*10^300, indi.gene.BF) # set to the limit value when overflow
     BF.gene[1, i]=indi.gene.BF
     
@@ -208,12 +208,6 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   ##############################################
   ## map back the original index 
   colnames(eta.k)=original.group.index
-  for (i in 1:length(full.info.genevar))
-  {
-    indi.group.index=unique(full.info.genevar[[i]]$category)
-    for (j in 1:length(indi.group.index))
-      full.info.genevar[[i]][full.info.genevar[[i]]$category==indi.group.index[j],]$category=original.group.index[indi.group.index[j]]
-  }
   ##############
   
   return(result = list(delta.est = delta.est[max.iter], delta.pvalue = pvalue[length(pvalue)], 
