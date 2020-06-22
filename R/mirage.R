@@ -34,10 +34,10 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   names(data) = c("ID", "Gene", "No.case", "No.contr", "category")
   data=data[order(data$category, decreasing = F),]
   
-  ################# re-index orignal group index to new consecutive index 
+  ################# re-index orignal group index to new natural consecutive index, 1, 2, 3,... 
   original.group.index=unique(data$category)
-  for (i in 1:nrow(data))
-    data$category[i]=which(data$category[i]==original.group.index) 
+  for (i in 1:length(original.group.index))
+    data[data$category==original.group.index[i],]$category=i
   #################
   
   
@@ -74,7 +74,8 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
       {
         var.index=var.index.list[j]
         category=data$category[var.index]
-        var.BF[j]=BF.var.inte(data$No.case[var.index], data$No.contr[var.index], ifelse(length(gamma)>1, gamma[category], gamma), ifelse(length(sigma)>1, sigma[category], sigma), n1, n2) # use uniform sigma/bar.gamma or category specific
+        original.index=original.group.index[category]
+        var.BF[j]=BF.var.inte(data$No.case[var.index], data$No.contr[var.index], ifelse(length(gamma)>1, gamma[original.index], gamma), ifelse(length(sigma)>1, sigma[original.index], sigma), n1, n2) # use uniform sigma/bar.gamma or category specific
         indi.gene.BF=indi.gene.BF*((1-eta.k[1, category])+eta.k[1, category]*var.BF[j])
         
       }
@@ -208,8 +209,11 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   ## map back the original index 
   colnames(eta.k)=original.group.index
   for (i in 1:length(full.info.genevar))
-    for (j in 1:nrow(full.info.genevar[[i]]))
-      full.info.genevar[[i]]$category[j]=original.group.index[full.info.genevar[[i]]$category[j]]
+  {
+    indi.group.index=unique(full.info.genevar[[i]]$category)
+    for (j in 1:length(indi.group.index))
+      full.info.genevar[[i]][full.info.genevar[[i]]$category==indi.group.index[j],]$category=original.group.index[indi.group.index[j]]
+  }
   ##############
   
   return(result = list(delta.est = delta.est[max.iter], delta.pvalue = pvalue[length(pvalue)], 
