@@ -31,16 +31,23 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   # Input check & initialize
   if (ncol(data) == 4) data = cbind(seq(1, nrow(data)), data)
   if (ncol(data) != 5) stop("Input data should have 4 or 5 columns!")
-  
   names(data) = c("ID", "Gene", "No.case", "No.contr", "category")
   data=data[order(data$category, decreasing = F),]
+  
+  ################# re-index orignal group index to new consecutive index 
+  original.group.index=unique(data$category)
+  for (i in 1:length(original.group.index))
+    data[data$category==original.group.index[i],]$category=i
+  #################
+  
+  
   gene.list=data$Gene
   unique.gene = unique(gene.list)
   num.gene = length(unique.gene)
   groups = unique(data$category)
   num.group = length(groups)
   data[,5] = match(data[,5], groups)
-  eta.k = matrix(nrow = max.iter, ncol = num.group)
+  eta.k = matrix(nrow = max.iter, ncol = num.group) 
   colnames(eta.k) = groups
   eta.k[1, ] = rep(eta.init, num.group)
   delta.est = delta.init
@@ -198,6 +205,13 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   } # end of g
   sum.lkhd=sum(cate.stat)
   ##############################################
+  ## map back the original index 
+  colnames(eta.k)=original.group.index
+  for (i in 1:length(full.info.genevar))
+    for (j in 1:nrow(full.info.genevar[[i]]))
+      full.info.genevar[[i]]$category[j]=original.group.index[j]
+  ##############
+  
   return(result = list(delta.est = delta.est[max.iter], delta.pvalue = pvalue[length(pvalue)], 
                        eta.est = eta.k[max.iter, ], eta.pvalue = cate.pvalue, 
                        BF.PP.gene = data.frame(Gene = unique.gene, BF = BF.gene[max.iter, ], 
