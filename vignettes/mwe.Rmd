@@ -59,7 +59,7 @@ head(res$BF.PP.gene)
 
 
 
-`n1, n2` are sample sizes in cases and controls. Other parameters are set by default.
+`n1, n2` are sample sizes in cases and controls. Other parameters are set by default. Note that the input data `mirage_toy, mirage_vs_toy` must be in data.frame  format without missing values. 
 
 
 
