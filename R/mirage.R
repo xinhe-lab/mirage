@@ -177,7 +177,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
       pvalue[i]=pchisq(teststat[i], 2, lower.tail=F)
   } # end of i
   teststat[num.gene+1]=2*total.lkhd
-  pvalue[num.gene+1]=pchisq(teststat[num.gene+1], 2, lower.tail=F)
+  pvalue[num.gene+1]=pchisq(teststat[num.gene+1], (1+num.group), lower.tail=F)
   
   ##################
   # calculate the LRT statistics and p-value for categories
