@@ -352,7 +352,7 @@ annotations and its application to Autism: <a href="https://www.biorxiv.org/cont
 <div id="examples" class="section level2">
 <h2>Examples</h2>
 <div id="run-mirage-mirage_vs-on-toy-examples" class="section level3">
-<h3>Run MIRAGE, MIRAGE_vs on toy examples</h3>
+<h3>Run mirage, mirage_vs on toy examples</h3>
 <p>Here is a minimal example for <code>mirage</code>. First load two
 test toy data-sets, <code>mirage_vs_toy</code> is for variant set (VS)
 with variant level only and <code>mirage_toy</code> is for gene set with
@@ -437,14 +437,67 @@ allele frequency &lt;1%.</p>
 <span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co"># 3 PTCHD2 0.8327124 0.9116743</span></span>
 <span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co"># 4   UBR4 1.2899155 0.9411381</span></span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co"># 5  CSMD2 0.8010560 0.9085032</span></span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co"># 6   NCDN 1.0006285 0.9253904</span></span></code></pre></div>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co"># 6   NCDN 1.0006285 0.9253904</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>BF.all[<span class="dv">1</span>])  <span class="co"># variant information in the first gene </span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co"># [[1]]</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#                                ID Gene No.case No.contr category       var.BF</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co"># 15129   6:161006077-161006077_C_T  LPA     298      272        1 1.634504e-07</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co"># 15078 6:160966536-160966536_A_ACC  LPA       2        2        2 6.059431e-01</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co"># 15079 6:160966537-160966539_TTG_T  LPA       2        2        2 6.059431e-01</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co"># 15082  6:160968821-160968822_AT_A  LPA       1        0        2 1.452084e+00</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co"># 15102   6:160969584-160969584_G_C  LPA       1        4        2 1.896752e-01</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co"># 15107  6:160977184-160977185_AC_A  LPA       0        1        2 5.479161e-01</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co"># 15114   6:160978560-160978560_G_A  LPA       1        0        2 1.452084e+00</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co"># 15116   6:160998167-160998167_C_T  LPA       1        5        2 1.405388e-01</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co"># 15142   6:161007480-161007480_C_T  LPA       1        0        2 1.452084e+00</span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co"># 15153   6:161010638-161010638_C_T  LPA       1        0        2 1.452084e+00</span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co"># 15163   6:161012014-161012014_G_T  LPA       0        1        2 5.479161e-01</span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="co"># 15171   6:161015102-161015102_C_A  LPA       1        0        2 1.452084e+00</span></span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a><span class="co"># 15177  6:161016494-161016494_C_CA  LPA       1        0        2 1.452084e+00</span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a><span class="co"># 15180   6:161020531-161020531_C_T  LPA       0        1        2 5.479161e-01</span></span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="co"># 15210   6:161071369-161071369_C_T  LPA       1        0        2 1.452084e+00</span></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="co"># 15061   6:160952816-160952816_T_C  LPA     118      103        3 7.596685e-02</span></span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a><span class="co"># 15068   6:160961137-160961137_T_C  LPA     257      248        3 3.931896e-08</span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a><span class="co"># 15073   6:160963771-160963771_C_A  LPA      50       44        4 9.300675e-02</span></span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a><span class="co"># 15074   6:160963774-160963774_C_G  LPA      21       32        4 5.040937e-02</span></span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a><span class="co"># 15075   6:160963774-160963774_C_T  LPA       0        2        4 3.291740e-01</span></span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a><span class="co"># 15081   6:160966559-160966559_G_A  LPA      17       28        4 5.484098e-02</span></span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a><span class="co"># 15135   6:161006105-161006105_C_T  LPA      88      100        4 2.698210e-02</span></span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a><span class="co"># 15148   6:161007619-161007619_G_T  LPA      26       20        4 2.857868e-01</span></span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a><span class="co"># 15195   6:161022107-161022107_C_T  LPA      79       90        4 2.795875e-02</span></span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a><span class="co">#       original.index</span></span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a><span class="co"># 15129              1</span></span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a><span class="co"># 15078              2</span></span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a><span class="co"># 15079              2</span></span>
+<span id="cb3-52"><a href="#cb3-52" tabindex="-1"></a><span class="co"># 15082              2</span></span>
+<span id="cb3-53"><a href="#cb3-53" tabindex="-1"></a><span class="co"># 15102              2</span></span>
+<span id="cb3-54"><a href="#cb3-54" tabindex="-1"></a><span class="co"># 15107              2</span></span>
+<span id="cb3-55"><a href="#cb3-55" tabindex="-1"></a><span class="co"># 15114              2</span></span>
+<span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a><span class="co"># 15116              2</span></span>
+<span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a><span class="co"># 15142              2</span></span>
+<span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a><span class="co"># 15153              2</span></span>
+<span id="cb3-59"><a href="#cb3-59" tabindex="-1"></a><span class="co"># 15163              2</span></span>
+<span id="cb3-60"><a href="#cb3-60" tabindex="-1"></a><span class="co"># 15171              2</span></span>
+<span id="cb3-61"><a href="#cb3-61" tabindex="-1"></a><span class="co"># 15177              2</span></span>
+<span id="cb3-62"><a href="#cb3-62" tabindex="-1"></a><span class="co"># 15180              2</span></span>
+<span id="cb3-63"><a href="#cb3-63" tabindex="-1"></a><span class="co"># 15210              2</span></span>
+<span id="cb3-64"><a href="#cb3-64" tabindex="-1"></a><span class="co"># 15061              3</span></span>
+<span id="cb3-65"><a href="#cb3-65" tabindex="-1"></a><span class="co"># 15068              3</span></span>
+<span id="cb3-66"><a href="#cb3-66" tabindex="-1"></a><span class="co"># 15073              4</span></span>
+<span id="cb3-67"><a href="#cb3-67" tabindex="-1"></a><span class="co"># 15074              4</span></span>
+<span id="cb3-68"><a href="#cb3-68" tabindex="-1"></a><span class="co"># 15075              4</span></span>
+<span id="cb3-69"><a href="#cb3-69" tabindex="-1"></a><span class="co"># 15081              4</span></span>
+<span id="cb3-70"><a href="#cb3-70" tabindex="-1"></a><span class="co"># 15135              4</span></span>
+<span id="cb3-71"><a href="#cb3-71" tabindex="-1"></a><span class="co"># 15148              4</span></span>
+<span id="cb3-72"><a href="#cb3-72" tabindex="-1"></a><span class="co"># 15195              4</span></span></code></pre></div>
 <p><code>n1, n2</code> are sample sizes in cases and controls. Other
 parameters are set by default. Note that the input data
 <code>mirage_toy, mirage_vs_toy</code> must be in data.frame format
-without missing values.</p>
+without missing values. <code>BF.all</code> has all variant level
+information for a gene.</p>
 </div>
-<div id="calculate-bayes-factor-of-every-variant-group" class="section level3">
-<h3>Calculate Bayes factor of every variant group</h3>
+<div id="calculate-bayes-factor-of-every-variant-group-in-a-gene" class="section level3">
+<h3>Calculate Bayes factor of every variant group in a gene</h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="do">########## after run MIRAGE,  given a gene, calculate the BF of every variant group.  </span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>res<span class="ot">=</span><span class="fu">mirage</span>(mirage_toy,<span class="at">n1=</span><span class="dv">4315</span>,<span class="at">n2=</span><span class="dv">4315</span>)  <span class="co"># run MIRAGE on a sample </span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co"># Computing gene level LRT statistics and p-values ...</span></span>

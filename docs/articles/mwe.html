@@ -89,7 +89,7 @@ annotations and its application to Autism: <a href="https://www.biorxiv.org/cont
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
 <div class="section level3">
-<h3 id="run-mirage-mirage_vs-on-toy-examples">Run MIRAGE, MIRAGE_vs on toy examples<a class="anchor" aria-label="anchor" href="#run-mirage-mirage_vs-on-toy-examples"></a>
+<h3 id="run-mirage-mirage_vs-on-toy-examples">Run mirage, mirage_vs on toy examples<a class="anchor" aria-label="anchor" href="#run-mirage-mirage_vs-on-toy-examples"></a>
 </h3>
 <p>Here is a minimal example for <code>mirage</code>. First load two
 test toy data-sets, <code>mirage_vs_toy</code> is for variant set (VS)
@@ -178,14 +178,67 @@ allele frequency &lt;1%.</p>
 <span><span class="co"># 3 PTCHD2 0.8327124 0.9116743</span></span>
 <span><span class="co"># 4   UBR4 1.2899155 0.9411381</span></span>
 <span><span class="co"># 5  CSMD2 0.8010560 0.9085032</span></span>
-<span><span class="co"># 6   NCDN 1.0006285 0.9253904</span></span></code></pre></div>
+<span><span class="co"># 6   NCDN 1.0006285 0.9253904</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">BF.all</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>  <span class="co"># variant information in the first gene </span></span>
+<span><span class="co"># [[1]]</span></span>
+<span><span class="co">#                                ID Gene No.case No.contr category       var.BF</span></span>
+<span><span class="co"># 15129   6:161006077-161006077_C_T  LPA     298      272        1 1.634504e-07</span></span>
+<span><span class="co"># 15078 6:160966536-160966536_A_ACC  LPA       2        2        2 6.059431e-01</span></span>
+<span><span class="co"># 15079 6:160966537-160966539_TTG_T  LPA       2        2        2 6.059431e-01</span></span>
+<span><span class="co"># 15082  6:160968821-160968822_AT_A  LPA       1        0        2 1.452084e+00</span></span>
+<span><span class="co"># 15102   6:160969584-160969584_G_C  LPA       1        4        2 1.896752e-01</span></span>
+<span><span class="co"># 15107  6:160977184-160977185_AC_A  LPA       0        1        2 5.479161e-01</span></span>
+<span><span class="co"># 15114   6:160978560-160978560_G_A  LPA       1        0        2 1.452084e+00</span></span>
+<span><span class="co"># 15116   6:160998167-160998167_C_T  LPA       1        5        2 1.405388e-01</span></span>
+<span><span class="co"># 15142   6:161007480-161007480_C_T  LPA       1        0        2 1.452084e+00</span></span>
+<span><span class="co"># 15153   6:161010638-161010638_C_T  LPA       1        0        2 1.452084e+00</span></span>
+<span><span class="co"># 15163   6:161012014-161012014_G_T  LPA       0        1        2 5.479161e-01</span></span>
+<span><span class="co"># 15171   6:161015102-161015102_C_A  LPA       1        0        2 1.452084e+00</span></span>
+<span><span class="co"># 15177  6:161016494-161016494_C_CA  LPA       1        0        2 1.452084e+00</span></span>
+<span><span class="co"># 15180   6:161020531-161020531_C_T  LPA       0        1        2 5.479161e-01</span></span>
+<span><span class="co"># 15210   6:161071369-161071369_C_T  LPA       1        0        2 1.452084e+00</span></span>
+<span><span class="co"># 15061   6:160952816-160952816_T_C  LPA     118      103        3 7.596685e-02</span></span>
+<span><span class="co"># 15068   6:160961137-160961137_T_C  LPA     257      248        3 3.931896e-08</span></span>
+<span><span class="co"># 15073   6:160963771-160963771_C_A  LPA      50       44        4 9.300675e-02</span></span>
+<span><span class="co"># 15074   6:160963774-160963774_C_G  LPA      21       32        4 5.040937e-02</span></span>
+<span><span class="co"># 15075   6:160963774-160963774_C_T  LPA       0        2        4 3.291740e-01</span></span>
+<span><span class="co"># 15081   6:160966559-160966559_G_A  LPA      17       28        4 5.484098e-02</span></span>
+<span><span class="co"># 15135   6:161006105-161006105_C_T  LPA      88      100        4 2.698210e-02</span></span>
+<span><span class="co"># 15148   6:161007619-161007619_G_T  LPA      26       20        4 2.857868e-01</span></span>
+<span><span class="co"># 15195   6:161022107-161022107_C_T  LPA      79       90        4 2.795875e-02</span></span>
+<span><span class="co">#       original.index</span></span>
+<span><span class="co"># 15129              1</span></span>
+<span><span class="co"># 15078              2</span></span>
+<span><span class="co"># 15079              2</span></span>
+<span><span class="co"># 15082              2</span></span>
+<span><span class="co"># 15102              2</span></span>
+<span><span class="co"># 15107              2</span></span>
+<span><span class="co"># 15114              2</span></span>
+<span><span class="co"># 15116              2</span></span>
+<span><span class="co"># 15142              2</span></span>
+<span><span class="co"># 15153              2</span></span>
+<span><span class="co"># 15163              2</span></span>
+<span><span class="co"># 15171              2</span></span>
+<span><span class="co"># 15177              2</span></span>
+<span><span class="co"># 15180              2</span></span>
+<span><span class="co"># 15210              2</span></span>
+<span><span class="co"># 15061              3</span></span>
+<span><span class="co"># 15068              3</span></span>
+<span><span class="co"># 15073              4</span></span>
+<span><span class="co"># 15074              4</span></span>
+<span><span class="co"># 15075              4</span></span>
+<span><span class="co"># 15081              4</span></span>
+<span><span class="co"># 15135              4</span></span>
+<span><span class="co"># 15148              4</span></span>
+<span><span class="co"># 15195              4</span></span></code></pre></div>
 <p><code>n1, n2</code> are sample sizes in cases and controls. Other
 parameters are set by default. Note that the input data
 <code>mirage_toy, mirage_vs_toy</code> must be in data.frame format
-without missing values.</p>
+without missing values. <code>BF.all</code> has all variant level
+information for a gene.</p>
 </div>
 <div class="section level3">
-<h3 id="calculate-bayes-factor-of-every-variant-group">Calculate Bayes factor of every variant group<a class="anchor" aria-label="anchor" href="#calculate-bayes-factor-of-every-variant-group"></a>
+<h3 id="calculate-bayes-factor-of-every-variant-group-in-a-gene">Calculate Bayes factor of every variant group in a gene<a class="anchor" aria-label="anchor" href="#calculate-bayes-factor-of-every-variant-group-in-a-gene"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">########## after run MIRAGE,  given a gene, calculate the BF of every variant group.  </span></span>
