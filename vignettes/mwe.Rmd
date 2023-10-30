@@ -25,6 +25,8 @@ A Bayesian method for rare variant analysis using functional annotations and its
 ## Examples
 
 
+### Run MIRAGE, MIRAGE_vs on toy examples 
+
 Here is a minimal example for `mirage`. First load  two test toy data-sets, `mirage_vs_toy` is for variant set (VS) with variant level only and `mirage_toy` is for gene set with both variant level and gene level.
 
 ```{r}
@@ -62,8 +64,27 @@ head(res$BF.PP.gene)
 `n1, n2` are sample sizes in cases and controls. Other parameters are set by default. Note that the input data `mirage_toy, mirage_vs_toy` must be in data.frame  format without missing values. 
 
 
+### Calculate Bayes factor of every variant group 
 
-
+```{r, cache=T}
+########## after run MIRAGE,  given a gene, calculate the BF of every variant group.  
+res=mirage(mirage_toy,n1=4315,n2=4315)  # run MIRAGE on a sample 
+num_category=6 # number of variant groups 
+variant_full_infor=res$BF.all[[1]]  # given a gene, say the first gene 
+variant_group_BF=numeric() # store variant group BF for a given gene 
+for (j in 1:num_category)
+{
+  if (sum(variant_full_infor$original.index==j)==0) # no variants in this group
+    variant_group_BF[j]=NA
+  
+  if (sum(variant_full_infor$original.index==j)>0) # variants exist in this group
+    variant_group_BF[j]=prod(1-res$eta.est[j]+res$eta.est[j]*
+    variant_full_infor[which(variant_full_infor$original.index==j),]$var.BF) 
+  # product of BF of variants within that variant group 
+   
+}
+variant_group_BF
+```
 
 
 
