@@ -1,6 +1,6 @@
 ---
 title: "Illustrative examples"
-author: "Gao Wang and Shengtong Han"
+author: "Gao Wang, Shengtong Han, Xiaotong Sun"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -16,62 +16,111 @@ knitr::opts_chunk$set(collapse = TRUE,comment = "#",fig.width = 4.5,
                       fig.cap = "&nbsp;",dpi = 120)
 ```
 
+## Installation
+
+```{r install_package, eval=FALSE}
+devtools::install_github('xinhe-lab/mirage')
+```
+
+Load the package
+
+```{r load_package}
+library(mirage)
+```
 
 
-## References
+## Preparing input data
 
-A Bayesian method for rare variant analysis using functional annotations and its application to Autism: https://www.biorxiv.org/content/10.1101/828061v1
+### Summary statistics for each rare variant. 
 
-## Examples
+MIRAGE requires summary statistics as input, including the ID for each rare variant. For each variant, it needs the allele counts in both cases and controls, the gene to which it belongs, and the annotation group index it is associated with. The annotation groups should be distinct categories, such as loss-of-function (LoF) variants and missense variants predicted to have deleterious effects.
 
-
-### Run mirage, mirage_vs on toy examples 
-
-Here is a minimal example for `mirage`. First load  two test toy data-sets, `mirage_vs_toy` is for variant set (VS) with variant level only and `mirage_toy` is for gene set with both variant level and gene level.
+We include an example input for MIRAGE in our package, which users can reference to format their own data accordingly.
 
 ```{r}
-library(mirage)
 data(mirage_toy)
 head(mirage_toy)
-data(mirage_vs_toy)
-head(mirage_vs_toy)
-```
-In both `mirage_vs_toy` and `mirage_toy`, every row is a variant with its summary statistics (`No.case`, how many times the variant appears in cases, `No.contr`, how many times the variant appears in controls --- you can compute these quantities from your data), variant group index `group.index` (which variant group it is from) and gene `Gene` (if any, which gene it is in) in columns. Variant groups can be user defined, usually depending on its annotations. For example one can define a variant group "rare LoF" for a loss-of-function variant ( the union of stop loss, stop gain, frameshift indels and splice site substitutions) having minor allele frequency <1%.
-
-Apply `mirage_vs` and `mirage` to toy data.
-
-```{r}
-res_vs = mirage_vs(mirage_vs_toy,n1=1000,n2=1000)
-str(res_vs)
-res_vs$eta.est  # parameter estimate 
-res_vs$eta.pvalue # p value 
-head(res_vs$full.info) # variant information 
-head(res_vs$post.prob) # posterior probability (PP) of variant 
 ```
 
+Each row in the input represents a variant with its summary statistics:
+
+- `No.case`: Number of times the variant appears in cases.
+- `No.contr`: Number of times the variant appears in controls.
+- `group.index`: Indicates the variant group it belongs to.
+- `Gene`: Specifies the associated gene, if any.
+
+Variant groups are user-defined, usually based on annotations. For example, a group "rare LoF" could be defined for loss-of-function variants (including stop loss, stop gain, frameshift indels, and splice site substitutions) with a minor allele frequency of less than 1%.
+
+## Additional arguments
+
+MIRAGE requires the following additional arguments:
+
+- `n1`: Sample size in cases (required).
+- `n2`: Sample size in controls (required).
+- `gamma`: A list of category-specific hyper prior shape parameters in the Beta distribution for effect size, or a numeric value if all categories share the same effect size. Default value is 3.
+- `sigma`: A list of category-specific hyper prior scale parameters in the Beta distribution for effect size, or a numeric value if all categories share the same effect size. Default value is 2.
+- `eta.init`: Initial value for the prior on the proportion of risk variants in a variant set. Default value is 0.1.
+- `delta.init`: Initial value for the prior on the proportion of risk genes. Must be a positive number between 0 and 1. Default value is 0.1.
+- `estimate.delta`: Specifies whether `delta` should be estimated (`TRUE`) or fixed at `delta.init` (`FALSE`). Default is `TRUE`.
+- `max.iter`: Maximum number of iterations, enforcing the EM algorithm to stop. Default is 10,000.
+- `tol`: Threshold of parameter estimate difference to determine the convergence of the EM algorithm. Default value is 1e-05.
+- `verbose`: When `TRUE`, enables detailed output during computation. Default is `TRUE`.
+
+Only `n1` and `n2` are required to run MIRAGE; other parameters have default values.
+
+## Running MIRAGE on toy data
 
 ```{r, cache=T}
 res=mirage(mirage_toy,n1=4315,n2=4315)
-res$delta.est
-res$delta.pvalue
-res$eta.est
-res$eta.pvalue
+```
+
+The output of MIRAGE is a list containing the following values:
+
+- `BF.PP.gene`: Bayes factor and posterior probability of genes.
+
+```{r }
 head(res$BF.PP.gene)
-head(res$BF.all[1])  # variant information in the first gene 
+```
+
+- `BF.all`: A list of Bayes factors for all variants within a gene.
+
+```{r }
+head(res$BF.all[1],n = 5) # variant information in the first gene 
+```
+
+- `delta.est`: Estimate for the proportion of risk genes.
+
+```{r }
+res$delta.est
+```
+
+- `delta.pvalue`: Significance test for delta = 0.
+
+```{r }
+res$delta.pvalue
+```
+
+- `eta.est`: Estimate for the proportion of risk variants in a variant group.
+
+```{r }
+res$eta.est
+```
+
+- `eta.pvalue`: Significance test for eta = 0.
+```{r }
+res$eta.pvalue
 ```
 
 
+### Calculating Bayes factor for each variant group within a gene 
 
-`n1, n2` are sample sizes in cases and controls. Other parameters are set by default. Note that the input data `mirage_toy, mirage_vs_toy` must be in data.frame  format without missing values. `BF.all` has all variant level information for a gene. 
-
-
-### Calculate Bayes factor of every variant group in a gene 
+Users may use the script below to compute Bayes factor for each variant group within a gene. We here show an example for computing for the first gene in our example data "LPA". 
 
 ```{r, cache=T}
 ########## after run MIRAGE,  given a gene, calculate the BF of every variant group.  
-res=mirage(mirage_toy,n1=4315,n2=4315)  # run MIRAGE on a sample 
-num_category=6 # number of variant groups 
-variant_full_infor=res$BF.all[[1]]  # given a gene, say the first gene 
+
+num_category=length(levels(as.factor(mirage_toy[mirage_toy$Gene =="LPA",]$group.index))) # number of variant groups 
+variant_full_infor=res$BF.all[[1]]  # extract results for first gene 
 variant_group_BF=numeric() # store variant group BF for a given gene 
 for (j in 1:num_category)
 {
