@@ -32,14 +32,17 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   if (ncol(data) == 4) data = cbind(seq(1, nrow(data)), data)
   if (ncol(data) != 5) stop("Input data should have 4 or 5 columns!")
   names(data) = c("ID", "Gene", "No.case", "No.contr", "category")
-  data=data[order(data$category, decreasing = F),]
+  # data=data[order(data$category, decreasing = F),]
+  # 
+  # ################# re-index orignal group index to new natural consecutive index, 1, 2, 3,... 
+  # original.group.index=unique(data$category)
+  # for (i in 1:length(original.group.index))
+  #   data[data$category==original.group.index[i],]$category=i
+  # #################
   
-  ################# re-index orignal group index to new natural consecutive index, 1, 2, 3,... 
-  original.group.index=unique(data$category)
-  for (i in 1:length(original.group.index))
-    data[data$category==original.group.index[i],]$category=i
-  #################
-  
+  data$category_factor <- factor(data$category, levels = unique(data$category))
+  data$category <- as.numeric(data$category_factor)
+  original.group.index <- as.character(data[!duplicated(data$category),]$category_factor)
   
   gene.list=data$Gene
   unique.gene = unique(gene.list)
