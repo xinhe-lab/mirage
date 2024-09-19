@@ -1,8 +1,8 @@
-pandoc: 2.17.1.1
+pandoc: 3.0.1
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   methodtutorial: methodtutorial.html
   mwe: mwe.html
-last_built: 2024-04-14T05:05Z
+last_built: 2024-09-19T21:36Z
 

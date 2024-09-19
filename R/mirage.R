@@ -58,13 +58,13 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   BF.genevar = list()
   full.info.genevar=list()
   ########################
-    if (verbose && num.gene > 1) {
-      pb = progress_bar$new(format = "[:spin] Initial analysis of unit :unit out of :total :elapsed", 
-                            clear = FALSE, total = num.gene, show_after = 0.5) 
-    } else { 
-      pb = null_progress_bar$new()
-    }
   
+  if (verbose && num.gene > 1) {
+    pb = progress_bar$new(format = "[:spin] Initial analysis of unit :unit out of :total :elapsed", 
+                          clear = FALSE, total = num.gene, show_after = 0.5) 
+  } else { 
+    pb = null_progress_bar$new()
+  }
   
   # calculate the Bayes factor for variant (i,j) and gene i as initials.
   for (i in 1:num.gene)
@@ -90,12 +90,12 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   }  # end of i 
   ########################## EM algorithm
   ######################
-    if (verbose) {
-      pb = progress_bar$new(format = "[:spin] Iteration :iteration (diff = :delta) :elapsed", 
-                            clear = TRUE, total = max.iter, show_after = 0.5)
-    } else { 
-      pb = null_progress_bar$new()
-    }
+  if (verbose) {
+    pb = progress_bar$new(format = "[:spin] Iteration :iteration (diff = :delta) :elapsed", 
+                          clear = TRUE, total = max.iter, show_after = 0.5)
+  } else { 
+    pb = null_progress_bar$new()
+  }
   for (iter in 2:max.iter)
   {
     prev_iter=iter-1
@@ -115,7 +115,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
           category=info.single.gene$category[j]  # category of variant j in gene i 
           numer=info.single.gene$var.BF[j]*eta.k[prev_iter, category]*delta.est[prev_iter]
           denom=(delta.est[prev_iter]+(1-delta.est[prev_iter])/BF.gene[prev_iter,i])*(eta.k[prev_iter, category]*info.single.gene$var.BF[j]
-                                                                               +(1-eta.k[prev_iter, category]))
+                                                                                      +(1-eta.k[prev_iter, category]))
           UiZij[j]=numer/denom
           bb=bb*((1-eta.k[prev_iter, category])+eta.k[prev_iter, category]*info.single.gene$var.BF[j])
           
@@ -149,11 +149,11 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
     ################
     diff = sum(abs(eta.k[iter, ] - eta.k[prev_iter, ]))
     if (diff < tol || iter >= max.iter) {
-        pb$tick(max.iter)
+      pb$tick(max.iter)
       max.iter = iter
       break
     }
-        pb$tick(tokens = list(delta = sprintf(diff, fmt = "%#.1e"), iteration = iter))
+    pb$tick(tokens = list(delta = sprintf(diff, fmt = "%#.1e"), iteration = iter))
   } # end of iter
   ######################################################################################################
   ######################################################################################################
@@ -173,11 +173,11 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
         category=single.gene$category[j]
         lkhd[i]=lkhd[i]*((1-eta.k[max.iter, category])+eta.k[max.iter, category]*single.gene$var.BF[j])
       }  
-      
-      teststat[i]=2*log((1-delta.est[max.iter])+delta.est[max.iter]*lkhd[i]); # this is the test statistics of one gene
-      total.lkhd=total.lkhd+log((1-delta.est[max.iter])+delta.est[max.iter]*lkhd[i])
-      
-      pvalue[i]=pchisq(teststat[i], 2, lower.tail=F)
+    
+    teststat[i]=2*log((1-delta.est[max.iter])+delta.est[max.iter]*lkhd[i]); # this is the test statistics of one gene
+    total.lkhd=total.lkhd+log((1-delta.est[max.iter])+delta.est[max.iter]*lkhd[i])
+    
+    pvalue[i]=pchisq(teststat[i], 2, lower.tail=F)
   } # end of i
   teststat[num.gene+1]=2*total.lkhd
   pvalue[num.gene+1]=pchisq(teststat[num.gene+1], (1+num.group), lower.tail=F)
@@ -220,204 +220,22 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
                        BF.all = full.info.genevar, Eui = EUi))
 }
 
-###############################################################
-#' mirage: MIxture model based Rare variant Analysis on GEnes
-#'
-#' This function implements rare variant test with MIRAGE model for variant set only without gene level information  
-#'
-#' @param data variant count data, a 4 column data frame for 1) locus ID  2) variant count in cases, 
-#' 3) variant count in control and 4) variant category index for a variant. The 1st column is optional.
-#' @param n1 sample size in cases.
-#' @param n2 sample size in controls.
-#' @param gamma a list of category specific hyper prior shape parameter in Beta distribution  for effect size, or a numeric value if all category share the same effect size.
-#' @param sigma a list of category specific hyper prior scale parameter in Beta distribution for effect size, or a numeric value if all category share the same effect size.
-#' @param eta.init initial value for prior on proportion of risk variants in a variant set.
-#' @param max.iter maximum number of iterations enforcing EM algorithm to stop 
-#' @param tol threshold of parameter estimate difference to determine the convergence of EM algorithm
-#' 
-#' 
-#' @return \item{full.info}{Bayes factor of individual variant}
-#' \item{eta.est}{Estimate for proportion of risk variants in a variant group}
-#' \item{eta.pvalue}{Significant test for eta = 0}
-#' \item{post.prob}{posterior probability of variants}
-#' @examples
-#' # see example at https://xinhe-lab.github.io/mirage/articles/mwe.html
-#' @importFrom progress progress_bar
-#' @export
-# format of input data column 1: variant ID 2: No.variant in cses 3 No.variant in control 4 variant group index 
-# n1: sample size in cases n2: sample size in control
-# this is for variant sets (VS) analysis which may be from multiple variant groups 
-mirage_vs=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, max.iter = 10000, tol = 1e-05, verbose = TRUE)
-{
-  # Input check & initialize
-  if (ncol(data) == 3) data = cbind(seq(1, nrow(data)), data)
-  if (ncol(data) != 4) stop("Input data should have 3 or 4 columns!")
-  
-  names(data) = c("ID", "No.case", "No.contr", "category")
-  groups = unique(data$category)
-  num.group = length(groups)
-  eta.k = matrix(nrow = max.iter, ncol = num.group)
-  data[,4] = match(data[,4], groups)
-  colnames(eta.k) = groups
-  eta.k[1, ] = rep(eta.init, num.group)
-  full.info.var=list()
-  num.var=nrow(data)
-  var.BF=numeric()
-  ########################
-  if (verbose && num.var > 1) {
-    pb = progress_bar$new(format = "[:spin] Initial analysis of unit :unit out of :total :elapsed", 
-                          clear = FALSE, total = num.var, show_after = 0.5) 
-  } else { 
-    pb = null_progress_bar$new()
-  }
-  
-  
-  #########################################
-  ########################
-  # calculate the Bayes factor for variant j as initials.
-  var.index.list=data$category
-  if (length(var.index.list)>0) # calculate Bayes factor for variant j
-    for (j in 1:length(var.index.list))
-    {
-      category=var.index.list[j]  # category for variant j
-      var.BF[j]=BF.var.inte(data$No.case[j], data$No.contr[j], ifelse(length(gamma)>1, gamma[category], gamma), ifelse(length(sigma)>1, sigma[category], sigma), n1, n2) # use uniform sigma/bar.gamma or category specific
-      var.BF[j]=ifelse(var.BF[j]==Inf, 3*10^300, var.BF[j])
-    }
-  full.info.var=cbind(data, var.BF)
-  #########################################
-  ########################## EM algorithm
-  if (verbose) {
-    pb = progress_bar$new(format = "[:spin] Iteration :iteration (diff = :delta) :elapsed", 
-                          clear = TRUE, total = max.iter, show_after = 0.5)
-  } else { 
-    pb = null_progress_bar$new()
-  }
-  for (iter in 2:max.iter)
-  {
-    prev_iter=iter-1
-    ############################
-    ############## EM algorithm: E step
-    EZj=numeric() # expectation for variant j
-    if (nrow(full.info.var)>0)
-      for (j in 1:nrow(full.info.var))
-      {
-        category=full.info.var$group.index[j]  # category index for variant j 
-        
-        if (num.group>1)
-        {
-          numer=full.info.var$var.BF[j]*eta.k[prev_iter, category]
-          denom=full.info.var$var.BF[j]*eta.k[prev_iter, category]+(1-eta.k[prev_iter, category])
-        }
-        
-        if (num.group==1)
-        {
-          numer=full.info.var$var.BF[j]*eta.k[prev_iter]
-          denom=full.info.var$var.BF[j]*eta.k[prev_iter]+(1-eta.k[prev_iter])
-        }
-        
-        EZj[j]=numer/denom
-      }
-    
-    ############ EM algorithm: M step
-    for (g in 1:num.group)
-    {
-      var.in.group.index=which(data$category==g)
-      if (length(var.in.group.index)>0)
-        eta.k[iter, g]=sum(EZj[var.in.group.index])/length(var.in.group.index)
-      if (length(var.in.group.index)==0)
-        eta.k[iter, g]=0
-    }
-    ################
-    if (num.group>1)
-      diff=sum(abs(eta.k[iter,]-eta.k[prev_iter,]))
-    if (num.group==1)
-      diff=sum(abs(eta.k[iter]-eta.k[prev_iter]))
-    
-    if (diff < tol || iter >= max.iter) {
-      pb$tick(max.iter)
-      max.iter = iter
-      break
-    }
-    pb$tick(tokens = list(delta = sprintf(diff, fmt = "%#.1e"), iteration = iter))
-  } # end of iter
-  ######################################################################################################
-  ######################################################################################################
-  eta.k = eta.k[1:max.iter, , drop=FALSE]
-  ################## calculate the likelihood ratio test statistics and p value
-  if (verbose) 
-    cat("Computing LRT statistics and p-value for every variant and all as a whole ...\n")
-  lkhd=rep(1,num.var); total.lkhd=0
-  teststat=numeric(); pvalue=numeric()
-  pp=numeric() # pp:posterior probability
-  
-  if (nrow(full.info.var)>0)
-    for (j in 1:nrow(full.info.var))
-    {
-      category=full.info.var$group.index[j]
-      if (num.group>1)
-      {
-        lkhd[j]=lkhd[j]*((1-eta.k[max.iter, category])+eta.k[max.iter, category]*full.info.var$var.BF[j])
-        pp[j]=(eta.k[max.iter, category]*full.info.var$var.BF[j])/(eta.k[max.iter, category]*full.info.var$var.BF[j]+1-eta.k[max.iter, category])
-      }  
-      if (num.group==1)
-      {
-        lkhd[j]=lkhd[j]*((1-eta.k[max.iter])+eta.k[max.iter]*full.info.var$var.BF[j])
-        pp[j]=(eta.k[max.iter]*full.info.var$var.BF[j])/(eta.k[max.iter]*full.info.var$var.BF[j]+1-eta.k[max.iter])
-      }  
-      
-      teststat[j]=2*log(lkhd[j]); # this is the test statistics of one gene
-      total.lkhd=total.lkhd+log(lkhd[j])
-      
-      pvalue[j]=pchisq(teststat[j], num.group, lower.tail=F)
-    }
-  teststat[num.var+1]=2*total.lkhd
-  pvalue[num.var+1]=pchisq(teststat[num.var+1], num.group, lower.tail=F) # 
-  
-  ##################
-  ############################################## calculate category specific test statistics and p value
-  if (verbose) 
-    cat("Computing LRT statistics and p-values by categories ...\n")
-  ##################
-  cate.lkhd=rep(1,num.group); cate.stat=numeric()
-  cate.pvalue=numeric(num.group); sum.lkhd=0
-  if (num.group>1)
-    for (g in 1:num.group)
-    { # g=2
-      if (nrow(full.info.var)>0)
-        for (j in 1:nrow(full.info.var))
-          if (full.info.var$group.index[j]==g)
-            cate.lkhd[g]=cate.lkhd[g]*((1-eta.k[max.iter, g])+eta.k[max.iter, g]*full.info.var$var.BF[j])
-          
-          cate.stat[g]=2*log(cate.lkhd[g])
-          cate.pvalue[g]=pchisq(cate.stat[g], 1, lower.tail=F)
-    } # end of g
-  if (num.group==1)
-  {
-    if (nrow(full.info.var)>0)
-      for (j in 1:nrow(full.info.var))
-        cate.lkhd[1]=cate.lkhd[1]*((1-eta.k[max.iter])+eta.k[max.iter]*full.info.var$var.BF[j])
-      
-      cate.stat[1]=2*log(cate.lkhd)
-      cate.pvalue[1]=pchisq(cate.stat, 1, lower.tail=F)
-      
-  }
-  return(result=list(eta.est=eta.k[max.iter,], full.info=full.info.var, eta.pvalue=cate.pvalue, post.prob=pp))
-  
+
+
+BF.var.inte = function(var.case, var.contr, bar.gamma, sig, N1, N0) {
+  # Under H0: gamma=1
+  log.marglik0.CC <- dbinom(var.case, sum(var.case, var.contr), N1/(N1 + N0),log = T)
+  # Under H1: gamma~gamma(gamma.mean*sigma, sigma)
+  log.marglik1.CC <- log(integrate(intergrand_log, var.case, var.contr, bar.gamma, sig, N1, 
+                                   N0, low = 0, upper = 100, stop.on.error = F)$value)
+  log.BF.var <- log.marglik1.CC - log.marglik0.CC
+  BF.var <- exp(log.BF.var)
+  return(BF.var)
 }
 
-#################################### two self defined functions 
-intergrand = function(aa, var.case, var.contr, bar.gamma, sig, N1, N0) {
-    ff = dbinom(var.case, sum(var.case, var.contr), aa * N1/(aa * N1 + N0)) * dgamma(aa, 
-        bar.gamma * sig, sig)
-    return(ff)
-}
-# calculate the bayes factor of a single variant via integration
-BF.var.inte = function(var.case, var.contr, bar.gamma, sig, N1, N0) {
-    # Under H0: gamma=1
-    marglik0.CC <- dbinom(var.case, sum(var.case, var.contr), N1/(N1 + N0))
-    # Under H1: gamma~gamma(gamma.mean*sigma, sigma)
-    marglik1.CC <- integrate(intergrand, var.case, var.contr, bar.gamma, sig, N1, 
-        N0, low = 0, upper = 100, stop.on.error = F)$value
-    BF.var <- marglik1.CC/marglik0.CC
-    return(BF.var)
+
+intergrand_log = function(aa, var.case, var.contr, bar.gamma, sig, N1, N0) {
+  log_ff = dbinom(var.case, sum(var.case, var.contr), aa * N1 / (aa * N1 + N0), log = TRUE) +
+    dgamma(aa, bar.gamma * sig, sig, log = TRUE)
+  return(exp(log_ff))  # Exponentiating to avoid log of negative values in integration
 }

@@ -1,6 +1,6 @@
 ---
 title: "Illustrative examples"
-author: "Gao Wang, Shengtong Han, Xiaotong Sun"
+author: "Xiaotong Sun, Gao Wang, Shengtong Han"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -37,6 +37,7 @@ MIRAGE requires summary statistics as input, including the ID for each rare vari
 
 We include an example input for MIRAGE in our package, which users can reference to format their own data accordingly.
 
+
 ```{r}
 data(mirage_toy)
 head(mirage_toy)
@@ -49,7 +50,15 @@ Each row in the input represents a variant with its summary statistics:
 - `group.index`: Indicates the variant group it belongs to.
 - `Gene`: Specifies the associated gene, if any.
 
+**Please note that, the analysis is limited to rare variants. So the MAF of all variants used in the analysis should be less than 0.01**
+
+In the example below, since the sample size is (4315 + 4315, case + control), users can filter the variants using 
+
+`mirage_toy[mirage_toy$No.case/(4315 + 4315) < 0.01|mirage_toy$No.contr/(4315 + 4315) < 0.01,]`
+
 Variant groups are user-defined, usually based on annotations. For example, a group "rare LoF" could be defined for loss-of-function variants (including stop loss, stop gain, frameshift indels, and splice site substitutions) with a minor allele frequency of less than 1%.
+
+
 
 ## Additional arguments
 
