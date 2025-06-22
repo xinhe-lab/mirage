@@ -42,7 +42,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   
   data$category_factor <- factor(data$category, levels = unique(data$category))
   data$category <- as.numeric(data$category_factor)
-  original.group.index <- as.character(data[!duplicated(data$category),]$category_factor)
+  original.group.index <- as.numeric(as.character(data[!duplicated(data$category),]$category_factor)) ###
   
   gene.list=data$Gene
   unique.gene = unique(gene.list)
