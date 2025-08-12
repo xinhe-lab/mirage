@@ -11,7 +11,7 @@
 #' @param delta.init initial value for prior on proportion of risk genes. Must be a positive number between 0 and 1. 
 #' @param eta.init initial value for prior on proportion of risk variants in a variant set.
 #' @param estimate.delta When TRUE delta is to be estimated and FALSE delta is fixed at delta.init
-#' @param estimate.eta When TRUE eta is to be estimated and FALSE eta is fixed at eta.init, in this case, delta will be not estimated and only report BF per gene. 
+#' @param estimate.eta When TRUE eta is to be estimated and FALSE eta is fixed at eta.init which MUST be provided and  BF per gene will be reported. 
 #' @param max.iter maximum number of iterations enforcing EM algorithm to stop 
 #' @param tol threshold of parameter estimate difference to determine the convergence of EM algorithm  
 #' 
@@ -230,7 +230,7 @@ if (estimate.eta==TRUE)
   } # end of if (estimate.eta==TRUE)
   
   if (estimate.eta==F)
-    return(result=list(BF.gene=data.frame(Gene = unique.gene, BF = BF.gene[1, ])), BF.all = full.info.genevar)
+    return(result=list(BF.gene=data.frame(Gene = unique.gene, BF = BF.gene[1, ]), BF.all = full.info.genevar))
   
 }
 

@@ -37,7 +37,7 @@ mirage(
 
 \item{estimate.delta}{When TRUE delta is to be estimated and FALSE delta is fixed at delta.init}
 
-\item{estimate.eta}{When TRUE eta is to be estimated and FALSE eta is fixed at eta.init, in this case, delta will be not estimated and only report BF per gene.}
+\item{estimate.eta}{When TRUE eta is to be estimated and FALSE eta is fixed at eta.init which MUST be provided and  BF per gene will be reported.}
 
 \item{max.iter}{maximum number of iterations enforcing EM algorithm to stop}
 
