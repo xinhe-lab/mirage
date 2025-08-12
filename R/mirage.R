@@ -24,7 +24,7 @@
 #' # see example at https://xinhe-lab.github.io/mirage/articles/mwe.html
 #' @importFrom progress progress_bar
 #' @export
-# format of input data column 1: variant ID 2: Gene ID 3 No.variant in cses 4 No.variant in control 5 variant group index 
+# format of input data column 1: variant ID 2: Gene ID 3 No.variant in cases 4 No.variant in control 5 variant group index 
 # n1: sample size in cases n2: sample size in control
 mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, max.iter = 10000, tol = 1e-05, verbose = TRUE)
 {
