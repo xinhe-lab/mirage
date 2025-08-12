@@ -11,6 +11,7 @@
 #' @param delta.init initial value for prior on proportion of risk genes. Must be a positive number between 0 and 1. 
 #' @param eta.init initial value for prior on proportion of risk variants in a variant set.
 #' @param estimate.delta When TRUE delta is to be estimated and FALSE delta is fixed at delta.init
+#' @param estimate.eta When TRUE eta is to be estimated and FALSE eta is fixed at eta.init, in this case, delta will be not estimated and only report BF per gene. 
 #' @param max.iter maximum number of iterations enforcing EM algorithm to stop 
 #' @param tol threshold of parameter estimate difference to determine the convergence of EM algorithm  
 #' 
@@ -26,7 +27,7 @@
 #' @export
 # format of input data column 1: variant ID 2: Gene ID 3 No.variant in cases 4 No.variant in control 5 variant group index 
 # n1: sample size in cases n2: sample size in control
-mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, max.iter = 10000, tol = 1e-05, verbose = TRUE)
+mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, estimate.eta=TRUE, max.iter = 10000, tol = 1e-05, verbose = TRUE)
 {
   # Input check & initialize
   if (ncol(data) == 4) data = cbind(seq(1, nrow(data)), data)
@@ -88,6 +89,9 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
     
     pb$tick(tokens = list(total = num.gene, unit = i))
   }  # end of i 
+  
+  
+  
   ########################## EM algorithm
   ######################
   if (verbose) {
@@ -96,6 +100,10 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   } else { 
     pb = null_progress_bar$new()
   }
+  
+if (estimate.eta==TRUE)
+{
+  
   for (iter in 2:max.iter)
   {
     prev_iter=iter-1
@@ -218,6 +226,12 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
                        BF.PP.gene = data.frame(Gene = unique.gene, BF = BF.gene[max.iter, ], 
                                                post.prob=(delta.est[max.iter]* BF.gene[max.iter, ])/(delta.est[max.iter]* BF.gene[max.iter, ]+1-delta.est[max.iter])),
                        BF.all = full.info.genevar, Eui = EUi))
+  
+  } # end of if (estimate.eta==TRUE)
+  
+  if (estimate.eta==F)
+    return(result=list(BF.gene=data.frame(Gene = unique.gene, BF = BF.gene[1, ])), BF.all = full.info.genevar)
+  
 }
 
 

@@ -13,6 +13,7 @@ mirage(
   eta.init = 0.1,
   delta.init = 0.1,
   estimate.delta = TRUE,
+  estimate.eta = TRUE,
   max.iter = 10000,
   tol = 1e-05,
   verbose = TRUE
@@ -35,6 +36,8 @@ mirage(
 \item{delta.init}{initial value for prior on proportion of risk genes. Must be a positive number between 0 and 1.}
 
 \item{estimate.delta}{When TRUE delta is to be estimated and FALSE delta is fixed at delta.init}
+
+\item{estimate.eta}{When TRUE eta is to be estimated and FALSE eta is fixed at eta.init, in this case, delta will be not estimated and only report BF per gene.}
 
 \item{max.iter}{maximum number of iterations enforcing EM algorithm to stop}
 
