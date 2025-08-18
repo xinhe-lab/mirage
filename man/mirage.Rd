@@ -14,6 +14,7 @@ mirage(
   delta.init = 0.1,
   estimate.delta = TRUE,
   estimate.eta = TRUE,
+  fixed.eta,
   max.iter = 10000,
   tol = 1e-05,
   verbose = TRUE
@@ -37,7 +38,9 @@ mirage(
 
 \item{estimate.delta}{When TRUE delta is to be estimated and FALSE delta is fixed at delta.init}
 
-\item{estimate.eta}{When TRUE eta is to be estimated and FALSE eta is fixed at eta.init which MUST be provided and  BF per gene will be reported.}
+\item{estimate.eta}{When TRUE eta is to be estimated and FALSE eta is fixed.eta MUST be provided and  BF per gene will be reported.}
+
+\item{fixed.eta}{fixed.eta must be provided when estimate.eta is false}
 
 \item{max.iter}{maximum number of iterations enforcing EM algorithm to stop}
 

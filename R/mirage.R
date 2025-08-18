@@ -11,7 +11,8 @@
 #' @param delta.init initial value for prior on proportion of risk genes. Must be a positive number between 0 and 1. 
 #' @param eta.init initial value for prior on proportion of risk variants in a variant set.
 #' @param estimate.delta When TRUE delta is to be estimated and FALSE delta is fixed at delta.init
-#' @param estimate.eta When TRUE eta is to be estimated and FALSE eta is fixed at eta.init which MUST be provided and  BF per gene will be reported. 
+#' @param estimate.eta When TRUE eta is to be estimated and FALSE eta is fixed.eta MUST be provided and  BF per gene will be reported. 
+#' @param fixed.eta fixed.eta must be provided when estimate.eta is false
 #' @param max.iter maximum number of iterations enforcing EM algorithm to stop 
 #' @param tol threshold of parameter estimate difference to determine the convergence of EM algorithm  
 #' 
@@ -27,7 +28,7 @@
 #' @export
 # format of input data column 1: variant ID 2: Gene ID 3 No.variant in cases 4 No.variant in control 5 variant group index 
 # n1: sample size in cases n2: sample size in control
-mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, estimate.eta=TRUE, max.iter = 10000, tol = 1e-05, verbose = TRUE)
+mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, estimate.delta = TRUE, estimate.eta=TRUE, fixed.eta, max.iter = 10000, tol = 1e-05, verbose = TRUE)
 {
   # Input check & initialize
   if (ncol(data) == 4) data = cbind(seq(1, nrow(data)), data)
@@ -53,7 +54,10 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   data[,5] = match(data[,5], groups)
   eta.k = matrix(nrow = max.iter, ncol = num.group) 
   colnames(eta.k) = groups
-  eta.k[1, ] = rep(eta.init, num.group)
+  if (estimate.eta==T)
+    eta.k[1, ] = rep(eta.init, num.group)
+  if (estimate.eta==F)
+    eta.k[1, ]=fixed.eta  
   delta.est = delta.init
   BF.gene = matrix(1, nrow = max.iter, ncol = num.gene)
   BF.genevar = list()
