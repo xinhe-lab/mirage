@@ -71,8 +71,10 @@ MIRAGE requires the following additional arguments:
 - `eta.init`: Initial value for the prior on the proportion of risk variants in a variant set. Default value is 0.1.
 - `delta.init`: Initial value for the prior on the proportion of risk genes. Must be a positive number between 0 and 1. Default value is 0.1.
 - `estimate.delta`: Specifies whether `delta` should be estimated (`TRUE`) or fixed at `delta.init` (`FALSE`). Default is `TRUE`.
+- `estimate.eta` Specifies where `eta` should be estimated (`TRUE`) or fixed at  `fixed.eta`. Default is `TRUE`. 
+- `fixed.eta` Must be provided when `estimate.eta` is false and   BF per gene will be reported. Its dimension must match the number of variant groups. 
 - `max.iter`: Maximum number of iterations, enforcing the EM algorithm to stop. Default is 10,000.
-- `tol`: Threshold of parameter estimate difference to determine the convergence of the EM algorithm. Default value is 1e-05.
+- `tol`: Threshold of parameter estimate difference to determine the convergence of the EM algorithm. Default value is $10^{-5}$.
 - `verbose`: When `TRUE`, enables detailed output during computation. Default is `TRUE`.
 
 Only `n1` and `n2` are required to run MIRAGE; other parameters have default values.
@@ -125,32 +127,52 @@ res$eta.pvalue
 
 Users may use the script below to compute Bayes factor for each variant group within a gene. We here show an example for computing for the first gene in our example data "LPA". 
 
-```{r, cache=T}
-########## after run MIRAGE,  given a gene, calculate the BF of every variant group.  
 
-num_category=length(levels(as.factor(mirage_toy[mirage_toy$Gene =="LPA",]$group.index))) # number of variant groups 
-variant_full_infor=res$BF.all[[1]]  # extract results for first gene 
-variant_group_BF=numeric() # store variant group BF for a given gene 
-for (j in 1:num_category)
-{
-  if (sum(variant_full_infor$original.index==j)==0) # no variants in this group
-    variant_group_BF[j]=NA
-  
-  if (sum(variant_full_infor$original.index==j)>0) # variants exist in this group
-    variant_group_BF[j]=prod(1-res$eta.est[j]+res$eta.est[j]*
-    variant_full_infor[which(variant_full_infor$original.index==j),]$var.BF) 
-  # product of BF of variants within that variant group 
-   
-}
+```{r, cache=T}
+########## after run MIRAGE,  given a gene, calculate the BF of every variant group.
+gene_name <- "LPA"
+
+# Number of variant groups for this gene
+num_category <- nlevels(factor(mirage_toy$group.index[mirage_toy$Gene == gene_name]))
+
+# Extract variant-level results for this gene
+variant_full_infor <- res$BF.all[[which(res$BF.PP.gene$Gene == gene_name)]]
+
+# Compute group-level BF
+variant_group_BF <- sapply(seq_len(num_category), function(j) {
+  idx <- which(variant_full_infor$original.index == j)
+  if (length(idx) == 0) {
+    return(NA_real_)
+  } else {
+    return(prod(1 - res$eta.est[j] + res$eta.est[j] * variant_full_infor$var.BF[idx]))
+  }
+})
+
 variant_group_BF
+
+```
+
+### Calculating Bayes factor with fixed eta
+
+
+```{r, cache=T}
+res=mirage(mirage_toy,n1=4315,n2=4315, estimate.eta = F, fixed.eta = c(0.60, 0.31, 0.16, 0.4, 0.2))
+```
+
+The output of MIRAGE is a list containing the following values:
+
+- `BF.gene`: a matrix of gene with BF's 
+
+```{r }
+head(res$BF.gene)
 ```
 
 
+- `BF.all`: A list of Bayes factors for all variants within a gene.
 
-
-
-
-
+```{r }
+head(res$BF.all[1],n = 5) # variant information in the first gene 
+```
 
 
 
