@@ -6,20 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Method Tutorial • mirage</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Method Tutorial">
-<meta property="og:description" content="mirage">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -61,7 +60,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -70,7 +69,7 @@
                         <h4 data-toc-skip class="author">Shengtong
 Han</h4>
             
-            <h4 data-toc-skip class="date">2024-09-19</h4>
+            <h4 data-toc-skip class="date">2025-09-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/xinhe-lab/mirage/blob/HEAD/vignettes/methodtutorial.Rmd" class="external-link"><code>vignettes/methodtutorial.Rmd</code></a></small>
       <div class="hidden name"><code>methodtutorial.Rmd</code></div>
@@ -87,21 +86,29 @@ case-variant set.</p>
 <div class="section level2">
 <h2 id="variant-set-vs-analysis-mirage_vs">Variant set (VS) analysis <code>mirage_vs</code><a class="anchor" aria-label="anchor" href="#variant-set-vs-analysis-mirage_vs"></a>
 </h2>
-<p>Suppose there are <span class="math inline">\(K\)</span> variant
-groups and let’s focus on one variant group only. Variant <span class="math inline">\(j\)</span> in the group is modeled a mixture of
-risk variant and non-risk variant following Bernoulli distribution</p>
-<p><span class="math display">\[P(Z_j=1)=\eta\]</span> <span class="math inline">\(Z_j\)</span> is a binary variable indicating it’s
-a risk variant <span class="math inline">\(Z_j=1\)</span> and non-risk
-<span class="math inline">\(Z_j=0\)</span>. All variants within the same
-group are assumed to be homogeneous sharing similar effect size and
-<span class="math inline">\(\eta\)</span> is the proportion of risk
-variants in the group. The posterior probability (PP) of being a risk
-variant is</p>
-<p><span class="math display">\[P(Z_j=1|X_j, T_j)=\frac{P(Z_j=1, X_j,
-T_j)}{P(X_j, T_j)}=\frac{\eta BF_j}{\eta BF_j+1-\eta}\]</span> where
-<span class="math inline">\(BF_j=\frac{P(X_j, T_j|Z_j=1)}{P(X_j,
-T_j|Z_j=0)}\)</span>, is the Bayes factor of variant <span class="math inline">\(j\)</span>, <span class="math inline">\(X_j,
-T_j\)</span> are rare allele counts in cases and both cases and controls
+<p>Suppose there are
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+variant groups and let’s focus on one variant group only. Variant
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+in the group is modeled a mixture of risk variant and non-risk variant
+following Bernoulli distribution</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Z</mi><mi>j</mi></msub><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>η</mi></mrow><annotation encoding="application/x-tex">P(Z_j=1)=\eta</annotation></semantics></math><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Z</mi><mi>j</mi></msub><annotation encoding="application/x-tex">Z_j</annotation></semantics></math>
+is a binary variable indicating it’s a risk variant
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Z</mi><mi>j</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">Z_j=1</annotation></semantics></math>
+and non-risk
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Z</mi><mi>j</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">Z_j=0</annotation></semantics></math>.
+All variants within the same group are assumed to be homogeneous sharing
+similar effect size and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>
+is the proportion of risk variants in the group. The posterior
+probability (PP) of being a risk variant is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Z</mi><mi>j</mi></msub><mo>=</mo><mn>1</mn><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mi>j</mi></msub><mo>,</mo><msub><mi>T</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Z</mi><mi>j</mi></msub><mo>=</mo><mn>1</mn><mo>,</mo><msub><mi>X</mi><mi>j</mi></msub><mo>,</mo><msub><mi>T</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>j</mi></msub><mo>,</mo><msub><mi>T</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>=</mo><mfrac><mrow><mi>η</mi><mi>B</mi><msub><mi>F</mi><mi>j</mi></msub></mrow><mrow><mi>η</mi><mi>B</mi><msub><mi>F</mi><mi>j</mi></msub><mo>+</mo><mn>1</mn><mo>−</mo><mi>η</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">P(Z_j=1|X_j, T_j)=\frac{P(Z_j=1, X_j, T_j)}{P(X_j, T_j)}=\frac{\eta BF_j}{\eta BF_j+1-\eta}</annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><msub><mi>F</mi><mi>j</mi></msub><mo>=</mo><mfrac><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>j</mi></msub><mo>,</mo><msub><mi>T</mi><mi>j</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>Z</mi><mi>j</mi></msub><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>j</mi></msub><mo>,</mo><msub><mi>T</mi><mi>j</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>Z</mi><mi>j</mi></msub><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">BF_j=\frac{P(X_j, T_j|Z_j=1)}{P(X_j, T_j|Z_j=0)}</annotation></semantics></math>,
+is the Bayes factor of variant
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>j</mi></msub><mo>,</mo><msub><mi>T</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">X_j, T_j</annotation></semantics></math>
+are rare allele counts in cases and both cases and controls
 respectively.</p>
 </div>
 <div class="section level2">
@@ -109,20 +116,32 @@ respectively.</p>
 </h2>
 <p>In a gene set, every gene is modeled as a mixture of risk gene and
 non-risk gene as</p>
-<p><span class="math display">\[P(U_i=1)=\delta\]</span></p>
-<p>gene <span class="math inline">\(i\)</span> is a risk gene when <span class="math inline">\(U_i=1\)</span> and non-risk gene <span class="math inline">\(U_i=0\)</span>. <span class="math inline">\(\delta\)</span> is the proportion of risk genes in
-the gene set. If gene <span class="math inline">\(i\)</span> is a risk
-gene, its variant <span class="math inline">\((i,j)\)</span> is from
-variant group <span class="math inline">\(k\)</span>, then <span class="math display">\[P(Z_{ij}=1)=\eta_k\]</span></p>
-<p><span class="math inline">\(\eta_k\)</span> is the proportion of risk
-variants in variant group <span class="math inline">\(k\)</span> where
-variants may be from multipe different genes. The posterior probability
-(PP) is</p>
-<p><span class="math display">\[PP_i=\frac{\delta B_i}{\delta
-B_i+1-\delta}\]</span></p>
-<p><span class="math inline">\(B_i\)</span> is the Bayes factor of gene
-<span class="math inline">\(i\)</span>. More details can be found in the
-reference.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>U</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>δ</mi></mrow><annotation encoding="application/x-tex">P(U_i=1)=\delta</annotation></semantics></math></p>
+<p>gene
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+is a risk gene when
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>U</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">U_i=1</annotation></semantics></math>
+and non-risk gene
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>U</mi><mi>i</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">U_i=0</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>δ</mi><annotation encoding="application/x-tex">\delta</annotation></semantics></math>
+is the proportion of risk genes in the gene set. If gene
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+is a risk gene, its variant
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math>
+is from variant group
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>,
+then
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>η</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">P(Z_{ij}=1)=\eta_k</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>η</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\eta_k</annotation></semantics></math>
+is the proportion of risk variants in variant group
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+where variants may be from multipe different genes. The posterior
+probability (PP) is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><msub><mi>P</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><mi>δ</mi><msub><mi>B</mi><mi>i</mi></msub></mrow><mrow><mi>δ</mi><msub><mi>B</mi><mi>i</mi></msub><mo>+</mo><mn>1</mn><mo>−</mo><mi>δ</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">PP_i=\frac{\delta B_i}{\delta B_i+1-\delta}</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>B</mi><mi>i</mi></msub><annotation encoding="application/x-tex">B_i</annotation></semantics></math>
+is the Bayes factor of gene
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>.
+More details can be found in the reference.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -134,9 +153,7 @@ annotations and its application to Autism: <a href="https://www.biorxiv.org/cont
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -149,16 +166,16 @@ annotations and its application to Autism: <a href="https://www.biorxiv.org/cont
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>
