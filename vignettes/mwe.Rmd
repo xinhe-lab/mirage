@@ -18,7 +18,7 @@ knitr::opts_chunk$set(collapse = TRUE,comment = "#",fig.width = 4.5,
 
 ## Installation
 
-```{r install_package, eval=FALSE}
+```{r install_package, eval=F}
 devtools::install_github('xinhe-lab/mirage')
 ```
 
@@ -101,27 +101,17 @@ head(res$BF.PP.gene)
 head(res$BF.all[1],n = 5) # variant information in the first gene 
 ```
 
-- `delta.est`: Estimate for the proportion of risk genes.
+- `delta.est`: Estimate for the proportion of risk genes and p value.
 
 ```{r }
 res$delta.est
 ```
 
-- `delta.pvalue`: Significance test for delta = 0.
 
-```{r }
-res$delta.pvalue
-```
-
-- `eta.est`: Estimate for the proportion of risk variants in a variant group.
+- `eta.est`: Estimate for the proportion of risk variants in each variant group and p values.
 
 ```{r }
 res$eta.est
-```
-
-- `eta.pvalue`: Significance test for eta = 0.
-```{r }
-res$eta.pvalue
 ```
 
 

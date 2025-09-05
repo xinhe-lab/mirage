@@ -508,164 +508,154 @@ a gene.</li>
 <span id="cb6-51"><a href="#cb6-51" tabindex="-1"></a><span class="co"># 15148               4 2.857868e-01              4</span></span>
 <span id="cb6-52"><a href="#cb6-52" tabindex="-1"></a><span class="co"># 15195               4 2.795875e-02              4</span></span></code></pre></div>
 <ul>
-<li><code>delta.est</code>: Estimate for the proportion of risk
-genes.</li>
+<li><code>delta.est</code>: Estimate for the proportion of risk genes
+and p value.</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>res<span class="sc">$</span>delta.est</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co"># [1] 0.925347</span></span></code></pre></div>
 <ul>
-<li><code>delta.pvalue</code>: Significance test for delta = 0.</li>
-</ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>res<span class="sc">$</span>delta.pvalue</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co"># [1] 0.9347734</span></span></code></pre></div>
-<ul>
 <li><code>eta.est</code>: Estimate for the proportion of risk variants
-in a variant group.</li>
+in each variant group and p values.</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>res<span class="sc">$</span>eta.est</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#             1             2             3             4             5 </span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#  0.000000e+00  1.030961e-01 4.940656e-324 1.976263e-323  7.871498e-02</span></span></code></pre></div>
-<ul>
-<li><code>eta.pvalue</code>: Significance test for eta = 0.</li>
-</ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>res<span class="sc">$</span>eta.pvalue</span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co"># [1] 1.0000000 0.4206792 1.0000000 1.0000000 0.2782136</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>res<span class="sc">$</span>eta.est</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#             1             2             3             4             5 </span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#  0.000000e+00  1.030961e-01 4.940656e-324 1.976263e-323  7.871498e-02</span></span></code></pre></div>
 <div id="calculating-bayes-factor-for-each-variant-group-within-a-gene" class="section level3">
 <h3>Calculating Bayes factor for each variant group within a gene</h3>
 <p>Users may use the script below to compute Bayes factor for each
 variant group within a gene. We here show an example for computing for
 the first gene in our example data “LPA”.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="do">########## after run MIRAGE,  given a gene, calculate the BF of every variant group.</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>gene_name <span class="ot">&lt;-</span> <span class="st">&quot;LPA&quot;</span></span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co"># Number of variant groups for this gene</span></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>num_category <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(<span class="fu">factor</span>(mirage_toy<span class="sc">$</span>group.index[mirage_toy<span class="sc">$</span>Gene <span class="sc">==</span> gene_name]))</span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co"># Extract variant-level results for this gene</span></span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>variant_full_infor <span class="ot">&lt;-</span> res<span class="sc">$</span>BF.all[[<span class="fu">which</span>(res<span class="sc">$</span>BF.PP.gene<span class="sc">$</span>Gene <span class="sc">==</span> gene_name)]]</span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a></span>
-<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co"># Compute group-level BF</span></span>
-<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>variant_group_BF <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">seq_len</span>(num_category), <span class="cf">function</span>(j) {</span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">which</span>(variant_full_infor<span class="sc">$</span>original.index <span class="sc">==</span> j)</span>
-<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(idx) <span class="sc">==</span> <span class="dv">0</span>) {</span>
-<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NA_real_</span>)</span>
-<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">prod</span>(<span class="dv">1</span> <span class="sc">-</span> res<span class="sc">$</span>eta.est[j] <span class="sc">+</span> res<span class="sc">$</span>eta.est[j] <span class="sc">*</span> variant_full_infor<span class="sc">$</span>var.BF[idx]))</span>
-<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a>  }</span>
-<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a>})</span>
-<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a></span>
-<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a>variant_group_BF</span>
-<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co"># [1] 1.0000000 0.9164266 1.0000000 1.0000000</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="do">########## after run MIRAGE,  given a gene, calculate the BF of every variant group.</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>gene_name <span class="ot">&lt;-</span> <span class="st">&quot;LPA&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co"># Number of variant groups for this gene</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>num_category <span class="ot">&lt;-</span> <span class="fu">nlevels</span>(<span class="fu">factor</span>(mirage_toy<span class="sc">$</span>group.index[mirage_toy<span class="sc">$</span>Gene <span class="sc">==</span> gene_name]))</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># Extract variant-level results for this gene</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>variant_full_infor <span class="ot">&lt;-</span> res<span class="sc">$</span>BF.all[[<span class="fu">which</span>(res<span class="sc">$</span>BF.PP.gene<span class="sc">$</span>Gene <span class="sc">==</span> gene_name)]]</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co"># Compute group-level BF</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>variant_group_BF <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">seq_len</span>(num_category), <span class="cf">function</span>(j) {</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">which</span>(variant_full_infor<span class="sc">$</span>original.index <span class="sc">==</span> j)</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(idx) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NA_real_</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">prod</span>(<span class="dv">1</span> <span class="sc">-</span> res<span class="sc">$</span>eta.est[j] <span class="sc">+</span> res<span class="sc">$</span>eta.est[j] <span class="sc">*</span> variant_full_infor<span class="sc">$</span>var.BF[idx]))</span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>  }</span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>})</span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>variant_group_BF</span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co"># [1] 1.0000000 0.9164266 1.0000000 1.0000000</span></span></code></pre></div>
 </div>
 <div id="calculating-bayes-factor-with-fixed-eta" class="section level3">
 <h3>Calculating Bayes factor with fixed eta</h3>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>res_fixed_eta<span class="ot">=</span><span class="fu">mirage</span>(mirage_toy,<span class="at">n1=</span><span class="dv">4315</span>,<span class="at">n2=</span><span class="dv">4315</span>, <span class="at">estimate.eta =</span> F, <span class="at">fixed.eta =</span> <span class="fu">c</span>(<span class="fl">0.60</span>, <span class="fl">0.31</span>, <span class="fl">0.16</span>, <span class="fl">0.4</span>, <span class="fl">0.2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>res_fixed_eta<span class="ot">=</span><span class="fu">mirage</span>(mirage_toy,<span class="at">n1=</span><span class="dv">4315</span>,<span class="at">n2=</span><span class="dv">4315</span>, <span class="at">estimate.eta =</span> F, <span class="at">fixed.eta =</span> <span class="fu">c</span>(<span class="fl">0.60</span>, <span class="fl">0.31</span>, <span class="fl">0.16</span>, <span class="fl">0.4</span>, <span class="fl">0.2</span>))</span></code></pre></div>
 <p>The output of MIRAGE is a list containing the following values:</p>
 <ul>
 <li><code>BF.gene</code>: a matrix of gene with BF’s</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">head</span>(res_fixed_eta<span class="sc">$</span>BF.gene)</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co">#     Gene          BF</span></span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co"># 1    LPA 0.009253237</span></span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co"># 2   MTOR 0.984853873</span></span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co"># 3 PTCHD2 0.585846104</span></span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co"># 4   UBR4 1.335284217</span></span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co"># 5  CSMD2 0.077841990</span></span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co"># 6   NCDN 1.023760609</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">head</span>(res_fixed_eta<span class="sc">$</span>BF.gene)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co">#     Gene          BF</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co"># 1    LPA 0.009253237</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co"># 2   MTOR 0.984853873</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co"># 3 PTCHD2 0.585846104</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co"># 4   UBR4 1.335284217</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co"># 5  CSMD2 0.077841990</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co"># 6   NCDN 1.023760609</span></span></code></pre></div>
 <ul>
 <li><code>BF.all</code>: A list of Bayes factors for all variants within
 a gene.</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">head</span>(res_fixed_eta<span class="sc">$</span>BF.all[<span class="dv">1</span>], <span class="at">n=</span><span class="dv">5</span>) <span class="co"># variant information in the first gene </span></span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="co"># [[1]]</span></span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#                                ID Gene No.case No.contr category</span></span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co"># 15129   6:161006077-161006077_C_T  LPA     298      272        1</span></span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co"># 15078 6:160966536-160966536_A_ACC  LPA       2        2        2</span></span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co"># 15079 6:160966537-160966539_TTG_T  LPA       2        2        2</span></span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co"># 15082  6:160968821-160968822_AT_A  LPA       1        0        2</span></span>
-<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co"># 15102   6:160969584-160969584_G_C  LPA       1        4        2</span></span>
-<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co"># 15107  6:160977184-160977185_AC_A  LPA       0        1        2</span></span>
-<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co"># 15114   6:160978560-160978560_G_A  LPA       1        0        2</span></span>
-<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co"># 15116   6:160998167-160998167_C_T  LPA       1        5        2</span></span>
-<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co"># 15142   6:161007480-161007480_C_T  LPA       1        0        2</span></span>
-<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co"># 15153   6:161010638-161010638_C_T  LPA       1        0        2</span></span>
-<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a><span class="co"># 15163   6:161012014-161012014_G_T  LPA       0        1        2</span></span>
-<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co"># 15171   6:161015102-161015102_C_A  LPA       1        0        2</span></span>
-<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="co"># 15177  6:161016494-161016494_C_CA  LPA       1        0        2</span></span>
-<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co"># 15180   6:161020531-161020531_C_T  LPA       0        1        2</span></span>
-<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="co"># 15210   6:161071369-161071369_C_T  LPA       1        0        2</span></span>
-<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="co"># 15061   6:160952816-160952816_T_C  LPA     118      103        3</span></span>
-<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="co"># 15068   6:160961137-160961137_T_C  LPA     257      248        3</span></span>
-<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a><span class="co"># 15073   6:160963771-160963771_C_A  LPA      50       44        4</span></span>
-<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a><span class="co"># 15074   6:160963774-160963774_C_G  LPA      21       32        4</span></span>
-<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a><span class="co"># 15075   6:160963774-160963774_C_T  LPA       0        2        4</span></span>
-<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a><span class="co"># 15081   6:160966559-160966559_G_A  LPA      17       28        4</span></span>
-<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a><span class="co"># 15135   6:161006105-161006105_C_T  LPA      88      100        4</span></span>
-<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a><span class="co"># 15148   6:161007619-161007619_G_T  LPA      26       20        4</span></span>
-<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a><span class="co"># 15195   6:161022107-161022107_C_T  LPA      79       90        4</span></span>
-<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a><span class="co">#       category_factor       var.BF original.index</span></span>
-<span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a><span class="co"># 15129               1 1.634504e-07              1</span></span>
-<span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a><span class="co"># 15078               2 6.059431e-01              2</span></span>
-<span id="cb14-31"><a href="#cb14-31" tabindex="-1"></a><span class="co"># 15079               2 6.059431e-01              2</span></span>
-<span id="cb14-32"><a href="#cb14-32" tabindex="-1"></a><span class="co"># 15082               2 1.452084e+00              2</span></span>
-<span id="cb14-33"><a href="#cb14-33" tabindex="-1"></a><span class="co"># 15102               2 1.896752e-01              2</span></span>
-<span id="cb14-34"><a href="#cb14-34" tabindex="-1"></a><span class="co"># 15107               2 5.479161e-01              2</span></span>
-<span id="cb14-35"><a href="#cb14-35" tabindex="-1"></a><span class="co"># 15114               2 1.452084e+00              2</span></span>
-<span id="cb14-36"><a href="#cb14-36" tabindex="-1"></a><span class="co"># 15116               2 1.405388e-01              2</span></span>
-<span id="cb14-37"><a href="#cb14-37" tabindex="-1"></a><span class="co"># 15142               2 1.452084e+00              2</span></span>
-<span id="cb14-38"><a href="#cb14-38" tabindex="-1"></a><span class="co"># 15153               2 1.452084e+00              2</span></span>
-<span id="cb14-39"><a href="#cb14-39" tabindex="-1"></a><span class="co"># 15163               2 5.479161e-01              2</span></span>
-<span id="cb14-40"><a href="#cb14-40" tabindex="-1"></a><span class="co"># 15171               2 1.452084e+00              2</span></span>
-<span id="cb14-41"><a href="#cb14-41" tabindex="-1"></a><span class="co"># 15177               2 1.452084e+00              2</span></span>
-<span id="cb14-42"><a href="#cb14-42" tabindex="-1"></a><span class="co"># 15180               2 5.479161e-01              2</span></span>
-<span id="cb14-43"><a href="#cb14-43" tabindex="-1"></a><span class="co"># 15210               2 1.452084e+00              2</span></span>
-<span id="cb14-44"><a href="#cb14-44" tabindex="-1"></a><span class="co"># 15061               3 7.596685e-02              3</span></span>
-<span id="cb14-45"><a href="#cb14-45" tabindex="-1"></a><span class="co"># 15068               3 3.931896e-08              3</span></span>
-<span id="cb14-46"><a href="#cb14-46" tabindex="-1"></a><span class="co"># 15073               4 9.300675e-02              4</span></span>
-<span id="cb14-47"><a href="#cb14-47" tabindex="-1"></a><span class="co"># 15074               4 5.040937e-02              4</span></span>
-<span id="cb14-48"><a href="#cb14-48" tabindex="-1"></a><span class="co"># 15075               4 3.291740e-01              4</span></span>
-<span id="cb14-49"><a href="#cb14-49" tabindex="-1"></a><span class="co"># 15081               4 5.484098e-02              4</span></span>
-<span id="cb14-50"><a href="#cb14-50" tabindex="-1"></a><span class="co"># 15135               4 2.698210e-02              4</span></span>
-<span id="cb14-51"><a href="#cb14-51" tabindex="-1"></a><span class="co"># 15148               4 2.857868e-01              4</span></span>
-<span id="cb14-52"><a href="#cb14-52" tabindex="-1"></a><span class="co"># 15195               4 2.795875e-02              4</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">head</span>(res_fixed_eta<span class="sc">$</span>BF.all[<span class="dv">1</span>], <span class="at">n=</span><span class="dv">5</span>) <span class="co"># variant information in the first gene </span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co"># [[1]]</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co">#                                ID Gene No.case No.contr category</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co"># 15129   6:161006077-161006077_C_T  LPA     298      272        1</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co"># 15078 6:160966536-160966536_A_ACC  LPA       2        2        2</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co"># 15079 6:160966537-160966539_TTG_T  LPA       2        2        2</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co"># 15082  6:160968821-160968822_AT_A  LPA       1        0        2</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co"># 15102   6:160969584-160969584_G_C  LPA       1        4        2</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co"># 15107  6:160977184-160977185_AC_A  LPA       0        1        2</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co"># 15114   6:160978560-160978560_G_A  LPA       1        0        2</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co"># 15116   6:160998167-160998167_C_T  LPA       1        5        2</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co"># 15142   6:161007480-161007480_C_T  LPA       1        0        2</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co"># 15153   6:161010638-161010638_C_T  LPA       1        0        2</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co"># 15163   6:161012014-161012014_G_T  LPA       0        1        2</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co"># 15171   6:161015102-161015102_C_A  LPA       1        0        2</span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co"># 15177  6:161016494-161016494_C_CA  LPA       1        0        2</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co"># 15180   6:161020531-161020531_C_T  LPA       0        1        2</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="co"># 15210   6:161071369-161071369_C_T  LPA       1        0        2</span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co"># 15061   6:160952816-160952816_T_C  LPA     118      103        3</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co"># 15068   6:160961137-160961137_T_C  LPA     257      248        3</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="co"># 15073   6:160963771-160963771_C_A  LPA      50       44        4</span></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a><span class="co"># 15074   6:160963774-160963774_C_G  LPA      21       32        4</span></span>
+<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a><span class="co"># 15075   6:160963774-160963774_C_T  LPA       0        2        4</span></span>
+<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a><span class="co"># 15081   6:160966559-160966559_G_A  LPA      17       28        4</span></span>
+<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="co"># 15135   6:161006105-161006105_C_T  LPA      88      100        4</span></span>
+<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="co"># 15148   6:161007619-161007619_G_T  LPA      26       20        4</span></span>
+<span id="cb12-27"><a href="#cb12-27" tabindex="-1"></a><span class="co"># 15195   6:161022107-161022107_C_T  LPA      79       90        4</span></span>
+<span id="cb12-28"><a href="#cb12-28" tabindex="-1"></a><span class="co">#       category_factor       var.BF original.index</span></span>
+<span id="cb12-29"><a href="#cb12-29" tabindex="-1"></a><span class="co"># 15129               1 1.634504e-07              1</span></span>
+<span id="cb12-30"><a href="#cb12-30" tabindex="-1"></a><span class="co"># 15078               2 6.059431e-01              2</span></span>
+<span id="cb12-31"><a href="#cb12-31" tabindex="-1"></a><span class="co"># 15079               2 6.059431e-01              2</span></span>
+<span id="cb12-32"><a href="#cb12-32" tabindex="-1"></a><span class="co"># 15082               2 1.452084e+00              2</span></span>
+<span id="cb12-33"><a href="#cb12-33" tabindex="-1"></a><span class="co"># 15102               2 1.896752e-01              2</span></span>
+<span id="cb12-34"><a href="#cb12-34" tabindex="-1"></a><span class="co"># 15107               2 5.479161e-01              2</span></span>
+<span id="cb12-35"><a href="#cb12-35" tabindex="-1"></a><span class="co"># 15114               2 1.452084e+00              2</span></span>
+<span id="cb12-36"><a href="#cb12-36" tabindex="-1"></a><span class="co"># 15116               2 1.405388e-01              2</span></span>
+<span id="cb12-37"><a href="#cb12-37" tabindex="-1"></a><span class="co"># 15142               2 1.452084e+00              2</span></span>
+<span id="cb12-38"><a href="#cb12-38" tabindex="-1"></a><span class="co"># 15153               2 1.452084e+00              2</span></span>
+<span id="cb12-39"><a href="#cb12-39" tabindex="-1"></a><span class="co"># 15163               2 5.479161e-01              2</span></span>
+<span id="cb12-40"><a href="#cb12-40" tabindex="-1"></a><span class="co"># 15171               2 1.452084e+00              2</span></span>
+<span id="cb12-41"><a href="#cb12-41" tabindex="-1"></a><span class="co"># 15177               2 1.452084e+00              2</span></span>
+<span id="cb12-42"><a href="#cb12-42" tabindex="-1"></a><span class="co"># 15180               2 5.479161e-01              2</span></span>
+<span id="cb12-43"><a href="#cb12-43" tabindex="-1"></a><span class="co"># 15210               2 1.452084e+00              2</span></span>
+<span id="cb12-44"><a href="#cb12-44" tabindex="-1"></a><span class="co"># 15061               3 7.596685e-02              3</span></span>
+<span id="cb12-45"><a href="#cb12-45" tabindex="-1"></a><span class="co"># 15068               3 3.931896e-08              3</span></span>
+<span id="cb12-46"><a href="#cb12-46" tabindex="-1"></a><span class="co"># 15073               4 9.300675e-02              4</span></span>
+<span id="cb12-47"><a href="#cb12-47" tabindex="-1"></a><span class="co"># 15074               4 5.040937e-02              4</span></span>
+<span id="cb12-48"><a href="#cb12-48" tabindex="-1"></a><span class="co"># 15075               4 3.291740e-01              4</span></span>
+<span id="cb12-49"><a href="#cb12-49" tabindex="-1"></a><span class="co"># 15081               4 5.484098e-02              4</span></span>
+<span id="cb12-50"><a href="#cb12-50" tabindex="-1"></a><span class="co"># 15135               4 2.698210e-02              4</span></span>
+<span id="cb12-51"><a href="#cb12-51" tabindex="-1"></a><span class="co"># 15148               4 2.857868e-01              4</span></span>
+<span id="cb12-52"><a href="#cb12-52" tabindex="-1"></a><span class="co"># 15195               4 2.795875e-02              4</span></span></code></pre></div>
 </div>
 </div>
 <div id="session-information" class="section level2">
 <h2>Session information</h2>
 <p>Here are some details about the computing environment, including the
 versions of R, and the R packages, used to generate these results.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co"># R version 4.3.2 (2023-10-31 ucrt)</span></span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co"># Platform: x86_64-w64-mingw32/x64 (64-bit)</span></span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="co"># Running under: Windows 11 x64 (build 26100)</span></span>
-<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co"># Matrix products: default</span></span>
-<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="co"># locale:</span></span>
-<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="co"># [1] LC_COLLATE=English_United States.utf8 </span></span>
-<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co"># [2] LC_CTYPE=English_United States.utf8   </span></span>
-<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="co"># [3] LC_MONETARY=English_United States.utf8</span></span>
-<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="co"># [4] LC_NUMERIC=C                          </span></span>
-<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co"># [5] LC_TIME=English_United States.utf8    </span></span>
-<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a><span class="co"># time zone: America/Chicago</span></span>
-<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a><span class="co"># tzcode source: internal</span></span>
-<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a><span class="co"># attached base packages:</span></span>
-<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a><span class="co"># [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span id="cb15-21"><a href="#cb15-21" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb15-22"><a href="#cb15-22" tabindex="-1"></a><span class="co"># other attached packages:</span></span>
-<span id="cb15-23"><a href="#cb15-23" tabindex="-1"></a><span class="co"># [1] mirage_0.1.0.0</span></span>
-<span id="cb15-24"><a href="#cb15-24" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb15-25"><a href="#cb15-25" tabindex="-1"></a><span class="co"># loaded via a namespace (and not attached):</span></span>
-<span id="cb15-26"><a href="#cb15-26" tabindex="-1"></a><span class="co">#  [1] digest_0.6.33     R6_2.6.1          codetools_0.2-19  fastmap_1.2.0    </span></span>
-<span id="cb15-27"><a href="#cb15-27" tabindex="-1"></a><span class="co">#  [5] xfun_0.50.6       cachem_1.1.0      knitr_1.49        pkgconfig_2.0.3  </span></span>
-<span id="cb15-28"><a href="#cb15-28" tabindex="-1"></a><span class="co">#  [9] htmltools_0.5.8.1 rmarkdown_2.29    lifecycle_1.0.4   cli_3.6.2        </span></span>
-<span id="cb15-29"><a href="#cb15-29" tabindex="-1"></a><span class="co"># [13] vctrs_0.6.5       sass_0.4.9        jquerylib_0.1.4   compiler_4.3.2   </span></span>
-<span id="cb15-30"><a href="#cb15-30" tabindex="-1"></a><span class="co"># [17] prettyunits_1.2.0 rstudioapi_0.17.1 tools_4.3.2       hms_1.1.3        </span></span>
-<span id="cb15-31"><a href="#cb15-31" tabindex="-1"></a><span class="co"># [21] evaluate_1.0.3    bslib_0.9.0       yaml_2.3.8        crayon_1.5.3     </span></span>
-<span id="cb15-32"><a href="#cb15-32" tabindex="-1"></a><span class="co"># [25] rlang_1.1.2       jsonlite_1.8.9    progress_1.2.3</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co"># R version 4.3.2 (2023-10-31 ucrt)</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co"># Platform: x86_64-w64-mingw32/x64 (64-bit)</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co"># Running under: Windows 11 x64 (build 26100)</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co"># Matrix products: default</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co"># locale:</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co"># [1] LC_COLLATE=English_United States.utf8 </span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co"># [2] LC_CTYPE=English_United States.utf8   </span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co"># [3] LC_MONETARY=English_United States.utf8</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co"># [4] LC_NUMERIC=C                          </span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co"># [5] LC_TIME=English_United States.utf8    </span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co"># time zone: America/Chicago</span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co"># tzcode source: internal</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co"># attached base packages:</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co"># [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co"># other attached packages:</span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co"># [1] mirage_0.1.0.0</span></span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co"># loaded via a namespace (and not attached):</span></span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#  [1] digest_0.6.33     R6_2.6.1          fastmap_1.2.0     xfun_0.50.6      </span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#  [5] cachem_1.1.0      knitr_1.49        pkgconfig_2.0.3   htmltools_0.5.8.1</span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#  [9] rmarkdown_2.29    lifecycle_1.0.4   cli_3.6.2         vctrs_0.6.5      </span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co"># [13] sass_0.4.9        jquerylib_0.1.4   compiler_4.3.2    prettyunits_1.2.0</span></span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co"># [17] rstudioapi_0.17.1 tools_4.3.2       hms_1.1.3         evaluate_1.0.3   </span></span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co"># [21] bslib_0.9.0       yaml_2.3.8        crayon_1.5.3      rlang_1.1.2      </span></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co"># [25] jsonlite_1.8.9    progress_1.2.3</span></span></code></pre></div>
 </div>
 
 
