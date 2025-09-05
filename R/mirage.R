@@ -56,8 +56,11 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   colnames(eta.k) = groups
   if (estimate.eta==T)
     eta.k[1, ] = rep(eta.init, num.group)
-  if (estimate.eta==F)
+  if (estimate.eta==F & num.group==length(fixed.eta))
     eta.k[1, ]=fixed.eta  
+  if (estimate.eta==F & num.group!=length(fixed.eta))
+    cat("error: the dimension of fixed.eta is not equal variant groups")
+  
   delta.est = delta.init
   BF.gene = matrix(1, nrow = max.iter, ncol = num.gene)
   BF.genevar = list()
