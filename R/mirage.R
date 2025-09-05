@@ -36,7 +36,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   names(data) = c("ID", "Gene", "No.case", "No.contr", "category")
   # data=data[order(data$category, decreasing = F),]
   # 
-  # ################# re-index orignal group index to new natural consecutive index, 1, 2, 3,... 
+  # ################# re-index original group index to new natural consecutive index, 1, 2, 3,... 
   # original.group.index=unique(data$category)
   # for (i in 1:length(original.group.index))
   #   data[data$category==original.group.index[i],]$category=i
@@ -59,7 +59,7 @@ mirage=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, delta.init=0.1, es
   if (estimate.eta==F & num.group==length(fixed.eta))
     eta.k[1, ]=fixed.eta  
   if (estimate.eta==F & num.group!=length(fixed.eta))
-    cat("error: the dimension of fixed.eta is not equal variant groups")
+    cat("error: the dimension of fixed.eta is not equal variant groups \n")
   
   delta.est = delta.init
   BF.gene = matrix(1, nrow = max.iter, ncol = num.gene)
@@ -228,8 +228,8 @@ if (estimate.eta==TRUE)
   colnames(eta.k)=original.group.index
   ##############
   
-  return(result = list(delta.est = delta.est[max.iter], delta.pvalue = pvalue[length(pvalue)], 
-                       eta.est = eta.k[max.iter, ], eta.pvalue = cate.pvalue, 
+  return(result = list(delta.est = data.frame(delta.est=delta.est[max.iter], delta.pvalue = pvalue[length(pvalue)]), 
+                       eta.est = data.frame(eta.est=eta.k[max.iter, ], eta.pvalue = cate.pvalue), 
                        BF.PP.gene = data.frame(Gene = unique.gene, BF = BF.gene[max.iter, ], 
                                                post.prob=(delta.est[max.iter]* BF.gene[max.iter, ])/(delta.est[max.iter]* BF.gene[max.iter, ]+1-delta.est[max.iter])),
                        BF.all = full.info.genevar, Eui = EUi))
