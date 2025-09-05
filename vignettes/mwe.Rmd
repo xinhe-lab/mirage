@@ -73,7 +73,7 @@ MIRAGE requires the following additional arguments:
 - `eta.init`: Initial value for the prior on the proportion of risk variants in a variant set. Default value is 0.1.
 - `delta.init`: Initial value for the prior on the proportion of risk genes. Must be a positive number between 0 and 1. Default value is 0.1.
 - `estimate.delta`: Specifies whether `delta` should be estimated (`TRUE`) or fixed at `delta.init` (`FALSE`). Default is `TRUE`.
-- `estimate.eta` Specifies where `eta` should be estimated (`TRUE`) or fixed at  `fixed.eta`. Default is `TRUE`. 
+- `estimate.eta` Specifies whether `eta` should be estimated (`TRUE`) or fixed at  `fixed.eta`. Default is `TRUE`. 
 - `fixed.eta` Must be provided when `estimate.eta` is false and   BF per gene will be reported. **Its dimension must match the number of variant groups**. 
 - `max.iter`: Maximum number of iterations, enforcing the EM algorithm to stop. Default is 10,000.
 - `tol`: Threshold of parameter estimate difference to determine the convergence of the EM algorithm. Default value is $10^{-5}$.
