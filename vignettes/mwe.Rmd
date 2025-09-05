@@ -136,7 +136,7 @@ variant_group_BF <- sapply(seq_len(num_category), function(j) {
   if (length(idx) == 0) {
     return(NA_real_)
   } else {
-    return(prod(1 - res$eta.est[j] + res$eta.est[j] * variant_full_infor$var.BF[idx]))
+    return(prod(1 - res$eta.est$eta.est[j] + res$eta.est$eta.est[j] * variant_full_infor$var.BF[idx]))
   }
 })
 

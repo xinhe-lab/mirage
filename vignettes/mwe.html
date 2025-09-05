@@ -416,8 +416,8 @@ Default value is 0.1.</li>
 should be estimated (<code>TRUE</code>) or fixed at
 <code>delta.init</code> (<code>FALSE</code>). Default is
 <code>TRUE</code>.</li>
-<li><code>estimate.eta</code> Specifies where <code>eta</code> should be
-estimated (<code>TRUE</code>) or fixed at <code>fixed.eta</code>.
+<li><code>estimate.eta</code> Specifies whether <code>eta</code> should
+be estimated (<code>TRUE</code>) or fixed at <code>fixed.eta</code>.
 Default is <code>TRUE</code>.</li>
 <li><code>fixed.eta</code> Must be provided when
 <code>estimate.eta</code> is false and BF per gene will be reported.
@@ -545,7 +545,7 @@ the first gene in our example data “LPA”.</p>
 <span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(idx) <span class="sc">==</span> <span class="dv">0</span>) {</span>
 <span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NA_real_</span>)</span>
 <span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">prod</span>(<span class="dv">1</span> <span class="sc">-</span> res<span class="sc">$</span>eta.est[j] <span class="sc">+</span> res<span class="sc">$</span>eta.est[j] <span class="sc">*</span> variant_full_infor<span class="sc">$</span>var.BF[idx]))</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">prod</span>(<span class="dv">1</span> <span class="sc">-</span> res<span class="sc">$</span>eta.est<span class="sc">$</span>eta.est[j] <span class="sc">+</span> res<span class="sc">$</span>eta.est<span class="sc">$</span>eta.est[j] <span class="sc">*</span> variant_full_infor<span class="sc">$</span>var.BF[idx]))</span>
 <span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>  }</span>
 <span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>})</span>
 <span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a></span>
