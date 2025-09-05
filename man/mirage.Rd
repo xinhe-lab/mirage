@@ -14,7 +14,7 @@ mirage(
   delta.init = 0.1,
   estimate.delta = TRUE,
   estimate.eta = TRUE,
-  fixed.eta,
+  fixed.eta = NULL,
   max.iter = 10000,
   tol = 1e-05,
   verbose = TRUE
