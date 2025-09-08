@@ -300,7 +300,14 @@ mirage_vs=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, estimate.eta=T,
   eta.k = matrix(nrow = max.iter, ncol = num.group)
   data[,4] = match(data[,4], groups)
   colnames(eta.k) = groups
-  eta.k[1, ] = rep(eta.init, num.group)
+  
+  if (estimate.eta==T)
+    eta.k[1, ] = rep(eta.init, num.group)
+  if (estimate.eta==F & num.group==length(fixed.eta))
+    eta.k[1, ]=fixed.eta  
+  if (estimate.eta==F & num.group!=length(fixed.eta))
+    cat("error: the dimension of fixed.eta is not equal variant groups \n")
+  
   full.info.var=list()
   num.var=nrow(data)
   var.BF=numeric()
@@ -326,6 +333,8 @@ mirage_vs=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, estimate.eta=T,
     }
   full.info.var=cbind(data, var.BF)
   #########################################
+if (estimate.eta==T)  
+{  
   ########################## EM algorithm
   ######################
   if (verbose) {
@@ -382,9 +391,12 @@ mirage_vs=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, estimate.eta=T,
     }
     pb$tick(tokens = list(delta = sprintf(diff, fmt = "%#.1e"), iteration = iter))
   } # end of iter
+  
   ######################################################################################################
   ######################################################################################################
   eta.k = eta.k[1:max.iter, , drop=FALSE]
+
+  
   ################## calculate the likelihood ratio test statistics and p value
   if (verbose) 
     cat("Computing LRT statistics and p-value for every variant and all as a whole ...\n")
@@ -445,6 +457,40 @@ mirage_vs=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, estimate.eta=T,
   }
   ######################
   ##############################################
-  return(result=list(eta.est=data.frame(eta.est=eta.k[max.iter,],eta.pvalue=cate.pvalue),  full.info=full.info.var,post.prob=data.frame(variant=data[,1], post.prob=pp)))
+  return(result=list(eta.est=data.frame(eta.est=eta.k[max.iter,],eta.pvalue=cate.pvalue),  
+                     full.info=full.info.var,post.prob=data.frame(variant=data[,1], BF=var.BF, post.prob=pp)))
+  
+}
+ 
+if (estimate.eta==F)
+{
+  pp=numeric(); ## pp: posterior probability 
+  max.iter=1
+  
+  if (nrow(full.info.var)>0)
+    for (j in 1:nrow(full.info.var))
+    {
+      category=full.info.var$group.index[j]
+      if (num.group>1)
+      {
+        lkhd[j]=lkhd[j]*((1-eta.k[max.iter, category])+eta.k[max.iter, category]*full.info.var$var.BF[j])
+        pp[j]=(eta.k[max.iter, category]*full.info.var$var.BF[j])/(eta.k[max.iter, category]*full.info.var$var.BF[j]+1-eta.k[max.iter, category])
+      }  
+      if (num.group==1)
+      {
+        lkhd[j]=lkhd[j]*((1-eta.k[max.iter])+eta.k[max.iter]*full.info.var$var.BF[j])
+        pp[j]=(eta.k[max.iter]*full.info.var$var.BF[j])/(eta.k[max.iter]*full.info.var$var.BF[j]+1-eta.k[max.iter])
+      }
+      
+      teststat[j]=2*log(lkhd[j]); # this is the test statistics of one gene
+      total.lkhd=total.lkhd+log(lkhd[j])
+      
+      pvalue[j]=pchisq(teststat[j], num.group, lower.tail=F)
+    }
+  
+  return(result=list(eta.est=data.frame(full.info=full.info.var,
+                                        post.prob=data.frame(variant=data[,1], BF=var.BF, post.prob=pp))))  
+}
+
   
 }
