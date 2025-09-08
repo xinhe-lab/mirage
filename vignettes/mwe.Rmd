@@ -199,7 +199,7 @@ res_vs$eta.est
 
 
 ```{r}
-res_vs$post.prob
+head(res_vs$post.prob)
 ```
 
 
