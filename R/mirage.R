@@ -466,16 +466,7 @@ if (estimate.eta==F)
 {
   pp=numeric(); ## pp: posterior probability 
   max.iter=1
-  
- # if (nrow(full.info.var)>0)
-#    for (j in 1:nrow(full.info.var))
-#    {
-#      category=full.info.var$group.index[j]
-#      if (num.group>1)
-#         pp[j]=(eta.k[max.iter, category]*full.info.var$var.BF[j])/(eta.k[max.iter, category]*full.info.var$var.BF[j]+1-eta.k[max.iter, category])
-#    
-#      if (num.group==1)
-#        pp[j]=(eta.k[max.iter]*full.info.var$var.BF[j])/(eta.k[max.iter]*full.info.var$var.BF[j]+1-eta.k[max.iter])
+
   
   if (nrow(full.info.var) > 0) {
     if (num.group > 1) {

@@ -178,7 +178,7 @@ head(res_fixed_eta$BF.all[1], n=5) # variant information in the first gene
 
 
 
-### Input data for mirage_vs
+### Input data for `mirage_vs`
 
 `mirage_vs` is the variant set version of `mirage`. The input data structure is the same but with no gene level information. 
 
@@ -186,7 +186,7 @@ head(res_fixed_eta$BF.all[1], n=5) # variant information in the first gene
 head(mirage_vs_toy)
 ```
 
-### Running mirage_vs on toy data
+### Running `mirage_vs` on toy data
 
 ```{r, cache=T}
 res_vs=mirage_vs(mirage_vs_toy,n1=4315,n2=4315)
@@ -206,7 +206,7 @@ head(res_vs$post.prob)
 ```
 
 
-### run `mirage_vs` on fixed eta
+### Run `mirage_vs` with fixed eta
 
 
 ```{r}
