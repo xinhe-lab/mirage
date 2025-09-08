@@ -203,6 +203,10 @@ head(res_vs$post.prob)
 ```
 
 
+```{r}
+res_vs_fixed_eta=mirage_vs(mirage_vs_toy,n1=4315,n2=4315, estimate.eta = F, fixed.eta = 0.1)
+```
+
 ## Session information
 
 Here are some details about the computing environment, including the

@@ -467,26 +467,28 @@ if (estimate.eta==F)
   pp=numeric(); ## pp: posterior probability 
   max.iter=1
   
-  if (nrow(full.info.var)>0)
-    for (j in 1:nrow(full.info.var))
-    {
-      category=full.info.var$group.index[j]
-      if (num.group>1)
-      {
-        lkhd[j]=lkhd[j]*((1-eta.k[max.iter, category])+eta.k[max.iter, category]*full.info.var$var.BF[j])
-        pp[j]=(eta.k[max.iter, category]*full.info.var$var.BF[j])/(eta.k[max.iter, category]*full.info.var$var.BF[j]+1-eta.k[max.iter, category])
-      }  
-      if (num.group==1)
-      {
-        lkhd[j]=lkhd[j]*((1-eta.k[max.iter])+eta.k[max.iter]*full.info.var$var.BF[j])
-        pp[j]=(eta.k[max.iter]*full.info.var$var.BF[j])/(eta.k[max.iter]*full.info.var$var.BF[j]+1-eta.k[max.iter])
-      }
-      
-      teststat[j]=2*log(lkhd[j]); # this is the test statistics of one gene
-      total.lkhd=total.lkhd+log(lkhd[j])
-      
-      pvalue[j]=pchisq(teststat[j], num.group, lower.tail=F)
+ # if (nrow(full.info.var)>0)
+#    for (j in 1:nrow(full.info.var))
+#    {
+#      category=full.info.var$group.index[j]
+#      if (num.group>1)
+#         pp[j]=(eta.k[max.iter, category]*full.info.var$var.BF[j])/(eta.k[max.iter, category]*full.info.var$var.BF[j]+1-eta.k[max.iter, category])
+#    
+#      if (num.group==1)
+#        pp[j]=(eta.k[max.iter]*full.info.var$var.BF[j])/(eta.k[max.iter]*full.info.var$var.BF[j]+1-eta.k[max.iter])
+  
+  if (nrow(full.info.var) > 0) {
+    if (num.group > 1) {
+      eta_vals <- eta.k[max.iter, full.info.var$group.index]
+    } else {
+      eta_vals <- rep(eta.k[max.iter], nrow(full.info.var))
     }
+    
+    pp <- (eta_vals * full.info.var$var.BF) / 
+      (eta_vals * full.info.var$var.BF + 1 - eta_vals)
+  }
+  
+      
   
   return(result=list(eta.est=data.frame(full.info=full.info.var,
                                         post.prob=data.frame(variant=data[,1], BF=var.BF, post.prob=pp))))  
