@@ -29,9 +29,9 @@ library(mirage)
 ```
 
 
-## Preparing input data
+## gene level analysis by mirage
 
-### Summary statistics for each rare variant. 
+### Summary statistics for each rare variant as input. 
 
 MIRAGE requires summary statistics as input, including the ID for each rare variant. For each variant, it needs the allele counts in both cases and controls, the gene to which it belongs, and the annotation group index it is associated with. The annotation groups should be distinct categories, such as loss-of-function (LoF) variants and missense variants predicted to have deleterious effects.
 
@@ -174,11 +174,33 @@ head(res_fixed_eta$BF.all[1], n=5) # variant information in the first gene
 
 
 
+##  variant level analysis by mirage_vs 
 
 
 
+### Input data for mirage_vs
+
+`mirage_vs` is the variant set version of `mirage`. The input data structure is the same but with no gene level information. 
+
+```{r}
+head(mirage_vs_toy)
+```
+
+### Running mirage_vs on toy data
+
+```{r, cache=T}
+res_vs=mirage_vs(mirage_vs_toy,n1=4315,n2=4315)
+```
+The output is a list of parameter estimate and posterior probability 
+
+```{r}
+res_vs$eta.est
+```
 
 
+```{r}
+res_vs$post.prob
+```
 
 
 ## Session information

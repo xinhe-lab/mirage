@@ -445,6 +445,6 @@ mirage_vs=function(data, n1, n2, gamma=3, sigma=2, eta.init=0.1, estimate.eta=T,
   }
   ######################
   ##############################################
-  return(result=list(eta.est=data.frame(eta.est=eta.k[max.iter,],eta.pvalue=cate.pvalue),  full.info=full.info.var,post.prob=pp))
+  return(result=list(eta.est=data.frame(eta.est=eta.k[max.iter,],eta.pvalue=cate.pvalue),  full.info=full.info.var,post.prob=data.frame(variant=data[,1], post.prob=pp)))
   
 }
