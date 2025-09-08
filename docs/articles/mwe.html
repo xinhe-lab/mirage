@@ -430,10 +430,19 @@ gene level information.</p>
 <span><span class="co"># Computing LRT statistics and p-values by categories ...</span></span></code></pre></div>
 <p>The output is a list of parameter estimate and posterior
 probability</p>
+<ul>
+<li>
+<code>eta.est</code>: Estimate of eta and p value</li>
+</ul>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_vs</span><span class="op">$</span><span class="va">eta.est</span></span>
 <span><span class="co">#     eta.est eta.pvalue</span></span>
 <span><span class="co"># 1 0.1063957 0.05768078</span></span></code></pre></div>
+<ul>
+<li>
+<code>post.prob</code>: BF and posterior probability of all
+variants</li>
+</ul>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res_vs</span><span class="op">$</span><span class="va">post.prob</span><span class="op">)</span></span>
 <span><span class="co">#   variant  post.prob</span></span>
@@ -443,10 +452,22 @@ probability</p>
 <span><span class="co"># 4       4 0.03198473</span></span>
 <span><span class="co"># 5       5 0.14740532</span></span>
 <span><span class="co"># 6       6 0.20286933</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="run-mirage_vs-on-fixed-eta">run <code>mirage_vs</code> on fixed eta<a class="anchor" aria-label="anchor" href="#run-mirage_vs-on-fixed-eta"></a>
+</h3>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_vs_fixed_eta</span><span class="op">=</span><span class="fu"><a href="../reference/mirage_vs.html">mirage_vs</a></span><span class="op">(</span><span class="va">mirage_vs_toy</span>,n1<span class="op">=</span><span class="fl">4315</span>,n2<span class="op">=</span><span class="fl">4315</span>, estimate.eta <span class="op">=</span> <span class="cn">F</span>, fixed.eta <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
 <span><span class="co"># Computing LRT statistics and p-value for every variant and all as a whole ...</span></span>
-<span><span class="co"># Computing LRT statistics and p-values by categories ...</span></span></code></pre></div>
+<span><span class="co"># Computing LRT statistics and p-values by categories ...</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res_vs_fixed_eta</span><span class="op">$</span><span class="va">post.prob</span><span class="op">)</span></span>
+<span><span class="co">#   variant  post.prob</span></span>
+<span><span class="co"># 1       1 0.14740532</span></span>
+<span><span class="co"># 2       2 0.15810118</span></span>
+<span><span class="co"># 3       3 0.02764764</span></span>
+<span><span class="co"># 4       4 0.03198473</span></span>
+<span><span class="co"># 5       5 0.14740532</span></span>
+<span><span class="co"># 6       6 0.20286933</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

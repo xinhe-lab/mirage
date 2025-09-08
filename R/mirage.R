@@ -490,8 +490,8 @@ if (estimate.eta==F)
   
       
   
-  return(result=list(eta.est=data.frame(full.info=full.info.var,
-                                        post.prob=data.frame(variant=data[,1], BF=var.BF, post.prob=pp))))  
+  return(result=list(full.info=full.info.var,
+                                        post.prob=data.frame(variant=data[,1], BF=var.BF, post.prob=pp)))  
 }
 
   

@@ -193,19 +193,29 @@ res_vs=mirage_vs(mirage_vs_toy,n1=4315,n2=4315)
 ```
 The output is a list of parameter estimate and posterior probability 
 
+- `eta.est`: Estimate of eta and p value 
+
 ```{r}
 res_vs$eta.est
 ```
 
+- `post.prob`: BF and posterior probability of all variants 
 
 ```{r}
 head(res_vs$post.prob)
 ```
 
 
+### run `mirage_vs` on fixed eta
+
+
 ```{r}
 res_vs_fixed_eta=mirage_vs(mirage_vs_toy,n1=4315,n2=4315, estimate.eta = F, fixed.eta = 0.1)
+head(res_vs_fixed_eta$post.prob)
 ```
+
+
+
 
 ## Session information
 
